@@ -1,0 +1,16 @@
+#+TITLE: GoApi (gin 的一些 demo)
+#+AUTHOR: 白鳥鵠
+#+DATE: 2020-05-11
+
+* 安装依赖
+#+BEGIN__SRC bash
+# 增加缺失的包, 移除没用的包
+go mod tidy
+# 把依赖拷贝到 ./vendor/ 下
+go mod vendor
+#+END_SRC
+
+* 调试
+#+BEGIN_SRC bash
+go run main.go
+#+END_SRC
