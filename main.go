@@ -21,32 +21,6 @@ var (
 	db *gorm.DB
 )
 
-func openDB() {
-	var err error
-
-	// db, err = gorm.Open("sqlite3", "./gorm.db")
-	dbUsername := os.Getenv("DB_USERNAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbDatabase := os.Getenv("DB_DATABASE")
-	db, err = gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbUsername, dbPassword, dbHost, dbPort, dbDatabase))
-	// db, err = gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-	// 	db_host, db_port, db_username, db_password, db_database))
-
-	if err != nil {
-		log.Panic(err)
-	} else {
-		fmt.Println("connect success")
-		db.SingularTable(true)
-	}
-}
-
-func closeDB() {
-	_ = db.Close()
-}
-
 func init() {
 	// 读取配置文件
 	err := godotenv.Load(".env")
@@ -76,5 +50,35 @@ func main() {
 	openDB()
 	defer closeDB()
 
+	account.SetDatabase(db)
+
+	// 运行 gin
 	_ = r.Run(":8080")
+}
+
+
+func openDB() {
+	var err error
+
+	// db, err = gorm.Open("sqlite3", "./gorm.db")
+	dbUsername := os.Getenv("DB_USERNAME")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbDatabase := os.Getenv("DB_DATABASE")
+	db, err = gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		dbUsername, dbPassword, dbHost, dbPort, dbDatabase))
+	// db, err = gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+	// 	db_host, db_port, db_username, db_password, db_database))
+
+	if err != nil {
+		log.Panic(err)
+	} else {
+		fmt.Println("connect success")
+		db.SingularTable(true)
+	}
+}
+
+func closeDB() {
+	_ = db.Close()
 }

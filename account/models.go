@@ -11,6 +11,9 @@ type User struct {
 var db *gorm.DB
 
 func Models(gormdb *gorm.DB) {
+	gormdb.AutoMigrate(&User{})
+}
+
+func SetDatabase(gormdb *gorm.DB) {
 	db = gormdb
-	db.AutoMigrate(&User{})
 }

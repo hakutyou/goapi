@@ -3,10 +3,8 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
-	"log"
-
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 )
 
 type responseBodyWriter struct {
@@ -25,8 +23,8 @@ func LoggerMiddleware(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	log.Printf("method: %v", c.Request.Method)
-	log.Printf("body: %v", string(data))
+	// log.Printf("method: %v", c.Request.Method)
+	// log.Printf("body: %v", string(data))
 	// 记录返回
 	w := responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
 	c.Writer = &w
@@ -34,5 +32,5 @@ func LoggerMiddleware(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 	c.Next()
 	// 打印返回内容
-	log.Printf("response[%v]: %v", w.Status(), w.body.String())
+	// log.Printf("response[%v]: %v", w.Status(), w.body.String())
 }
