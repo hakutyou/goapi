@@ -10,7 +10,27 @@ go mod tidy
 go mod vendor
 #+END_SRC
 
-* 调试
+* 配置
+#+BEGIN_SRC bash
+cp script/debug.env .env
+# 修改 .env 文件
+#+END_SRC
+
+* 运行
+Debug 模式直接运行
 #+BEGIN_SRC bash
 go run main.go
+#+END_SRC
+
+Release 模式添加以下内容
+#+BEGIN_SRC golang
+// gin start
+gin.SetMode(gin.ReleaseMode)
+r = gin.Default()
+// ....
+#+END_SRC
+
+或者使用环境变量
+#+BEGIN_SRC bash
+GIN_MODE=release go run main.go
 #+END_SRC
