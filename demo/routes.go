@@ -5,11 +5,6 @@ import (
 )
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/ping/", doRequest)
-}
-
-func doRequest(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
+	r.GET("/cache", GetCache)
+	r.POST("/cache", SetCache)
 }
