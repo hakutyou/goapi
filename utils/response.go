@@ -9,7 +9,7 @@ func Response(c *gin.Context, code int, errcode int, message string) {
 	})
 }
 
-func ResponseWithData(c *gin.Context, code int, errcode int, message string, data gin.H) {
+func ResponseWithData(c *gin.Context, code int, errcode int, message string, data interface{}) {
 	c.JSON(code, gin.H{
 		"code":    errcode,
 		"message": message,

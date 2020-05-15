@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/hakutyou/goapi/utils"
 	"log"
 	"net/http"
 	"os"
@@ -26,6 +27,9 @@ func init() {
 	if err != nil {
 		log.Fatal("无法读取 .env 文件")
 	}
+
+	// JWT 配置
+	utils.SetEnvironment(os.Getenv("JWT_SECRET"))
 
 	// 数据库配置
 	openDB()

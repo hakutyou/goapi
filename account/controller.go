@@ -32,6 +32,7 @@ func loginAccount(c *gin.Context) {
 		user  User
 		err   error
 		token string
+		ret   bool
 	)
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -39,7 +40,8 @@ func loginAccount(c *gin.Context) {
 		return
 	}
 
-	if user.CheckAuth() == false {
+	user, ret = user.Login()
+	if ret == false {
 		utils.Response(c, http.StatusUnauthorized, -1, "用户名或密码错误")
 		return
 	}
@@ -52,5 +54,20 @@ func loginAccount(c *gin.Context) {
 	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", gin.H{
 		"token": token,
 	})
+	return
+}
+
+func getUserinfo(c *gin.Context) {
+	var (
+		user User
+		ret  bool
+	)
+	userID := c.MustGet("user_id").(uint)
+	user, ret = GetUserInfo(userID)
+	if ret == false {
+		utils.Response(c, http.StatusUnauthorized, -1, "登录信息无效")
+		return
+	}
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", user)
 	return
 }
