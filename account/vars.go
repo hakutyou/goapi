@@ -1,6 +1,8 @@
 package account
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 var (
 	db *gorm.DB

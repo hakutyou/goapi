@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/hakutyou/goapi/account"
 	"github.com/hakutyou/goapi/demo"
 	"github.com/hakutyou/goapi/middleware"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Route() {
@@ -14,9 +15,9 @@ func Route() {
 }
 
 func MiddleWare() {
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	// r.Use(gin.Logger())
 	r.Use(middleware.LoggerMiddleware)
+	r.Use(gin.Recovery())
 }
 
 func Migrations() {

@@ -2,20 +2,24 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/hakutyou/goapi/utils"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
-	"github.com/gin-gonic/gin"
 	"github.com/hakutyou/goapi/account"
 	"github.com/hakutyou/goapi/demo"
+	"github.com/hakutyou/goapi/middleware"
+	"github.com/hakutyou/goapi/utils"
+
+	"github.com/garyburd/redigo/redis"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"go.uber.org/zap"
 	// _ "github.com/jinzhu/gorm/dialects/postgres"
 	// _ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
@@ -25,7 +29,7 @@ func init() {
 	// 读取配置文件
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("无法读取 .env 文件")
+		panic("无法读取 .env 文件")
 	}
 
 	// JWT 配置
@@ -45,6 +49,12 @@ func init() {
 }
 
 func main() {
+	// 日志
+	openLogger()
+	defer closeLogger()
+
+	middleware.SetLogger(sugar)
+
 	// 连接数据库
 	openDB()
 	defer closeDB()
@@ -62,10 +72,11 @@ func main() {
 		Addr:    ":8080",
 		Handler: r,
 	}
+	sugar.Info("Server started")
 	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			panic(fmt.Sprintf("listen: %s\n", err))
 		}
 	}()
 	// Wait for interrupt signal to gracefully shutdown the server with
@@ -73,14 +84,14 @@ func main() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("Shutdown Server ...")
+	sugar.Info("Shutdown server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+		sugar.Info("Server Shutdown: ", err)
 	}
-	log.Println("Server exiting")
+	sugar.Info("Server exiting")
 }
 
 func openDB() {
@@ -98,9 +109,8 @@ func openDB() {
 	// 	db_host, db_port, db_username, db_password, db_database))
 
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	} else {
-		fmt.Println("connect success")
 		db.SingularTable(true)
 	}
 }
@@ -114,10 +124,28 @@ func openRedis() {
 
 	conn, err = redis.Dial("tcp", "127.0.0.1:6379")
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 }
 
 func closeRedis() {
 	conn.Close()
+}
+
+func openLogger() {
+	var (
+		err error
+		cfg zap.Config
+	)
+
+	zapConfig, _ := ioutil.ReadFile("zap.config")
+	if err = json.Unmarshal(zapConfig, &cfg); err != nil {
+		panic(err)
+	}
+	logger, _ := cfg.Build() // zap.NewProduction()
+	sugar = logger.Sugar()
+}
+
+func closeLogger() {
+	_ = sugar.Sync()
 }

@@ -1,11 +1,13 @@
 package auth
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/hakutyou/goapi/utils"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/hakutyou/goapi/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TokenCheckMiddleware(c *gin.Context) {

@@ -3,8 +3,10 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io/ioutil"
+
+	"github.com/gin-gonic/gin"
+	"github.com/satori/go.uuid"
 )
 
 type responseBodyWriter struct {
@@ -18,13 +20,22 @@ func (w *responseBodyWriter) Write(b []byte) (int, error) {
 }
 
 func LoggerMiddleware(c *gin.Context) {
+	// 获取 request_id
+	requestId := c.GetHeader("request_id")
+	if requestId == "" {
+		requestId = uuid.NewV4().String()
+	}
+
 	// 打印接收内容
 	data, err := c.GetRawData()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	// log.Printf("method: %v", c.Request.Method)
-	// log.Printf("body: %v", string(data))
+	sugar.Infow("接收请求",
+		"request_id", requestId,
+		"path", c.Request.URL,
+		"method", c.Request.Method,
+		"body", string(data))
 	// 记录返回
 	w := responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
 	c.Writer = &w
@@ -32,5 +43,10 @@ func LoggerMiddleware(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
 	c.Next()
 	// 打印返回内容
-	// log.Printf("response[%v]: %v", w.Status(), w.body.String())
+
+	sugar.Infow("返回请求",
+		"request_id", requestId,
+		"status", w.Status(),
+		"response", w.body.String(),
+	)
 }
