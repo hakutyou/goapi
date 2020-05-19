@@ -19,9 +19,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"go.uber.org/zap"
-	// _ "github.com/jinzhu/gorm/dialects/postgres"
-	// _ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/joho/godotenv"
 )
 
@@ -95,19 +95,29 @@ func main() {
 }
 
 func openDB() {
-	var err error
+	var (
+		err error
+		command string
+	)
 
-	// db, err = gorm.Open("sqlite3", "./gorm.db")
+	database := os.Getenv("DATABASE")
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbDatabase := os.Getenv("DB_DATABASE")
-	db, err = gorm.Open("mysql", fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbUsername, dbPassword, dbHost, dbPort, dbDatabase))
-	// db, err = gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-	// 	db_host, db_port, db_username, db_password, db_database))
+	if database == "mysql" {
+		command = fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+			dbUsername, dbPassword, dbHost, dbPort, dbDatabase)
+	} else if database == "postgres" {
+		command = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+			dbHost, dbPort, dbUsername, dbPassword, dbDatabase)
+	} else {
+		database = "sqlite3"
+		command = "./gorm.db"
+	}
 
+	db, err = gorm.Open(database, command)
 	if err != nil {
 		panic(err)
 	} else {
