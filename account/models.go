@@ -1,17 +1,37 @@
 package account
 
 import (
+	"encoding/hex"
 	"github.com/hakutyou/goapi/utils"
-
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/sha3"
 )
+
+type password string
+
+func (p *password) UnmarshalJSON(data []byte) error {
+	h := make([]byte, 64)
+	c1 := sha3.NewShake256()
+	if _, err := c1.Write(data); err != nil {
+		return err
+	}
+	if _, err := c1.Read(h); err != nil {
+		return err
+	}
+	*p = password(hex.EncodeToString(h))
+	return nil
+}
+
+func (password) MarshalJSON() ([]byte, error) {
+	return []byte(`"x"`), nil
+}
 
 type User struct {
 	gorm.Model
 
-	Name     string `binding:"required" json:"name" gorm:"index;unique;not null;size:32"`
-	Password string `binding:"required" gorm:"size:255"`
-	Status   bool
+	Name     string   `binding:"required" json:"name" gorm:"index;unique;not null;size:32"`
+	Password password `binding:"required" json:"password" gorm:"size:255"`
+	Status   bool     `json:"status"`
 }
 
 func Models(gormdb *gorm.DB) {

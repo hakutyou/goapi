@@ -21,8 +21,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"go.uber.org/zap"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 )
 
 func init() {
@@ -68,6 +68,7 @@ func main() {
 	demo.SetRedis(conn)
 
 	// 运行 gin
+	// TODO: 需要一个热更新代码的方式, gracehttp
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: r,
@@ -96,7 +97,7 @@ func main() {
 
 func openDB() {
 	var (
-		err error
+		err     error
 		command string
 	)
 
