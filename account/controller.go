@@ -11,10 +11,17 @@ import (
 func createAccount(c *gin.Context) {
 	user := User{
 		Status: true,
+		Salt:   generateSalt(32),
 	}
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
+		return
+	}
+
+	// 密码加密
+	if err := user.Password.doHash(user.Salt); err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
 		return
 	}
 
