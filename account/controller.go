@@ -11,9 +11,10 @@ import (
 // @Summary	创建用户
 // @Description	创建用户
 // @Tags 用户
-// @Accept	json
+// @Accept	mpfd
 // @Produce	json
-// @Param	body	body	User	true	"用户信息"
+// @Param	name		formData	string	true	"用户名"
+// @Param	password	formData	string	true	"密码"
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
 // @Router	/go/account/	[post]
@@ -23,7 +24,7 @@ func createAccount(c *gin.Context) {
 		Salt:   generateSalt(32),
 	}
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBind(&user); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}
@@ -46,9 +47,10 @@ func createAccount(c *gin.Context) {
 // @Summary	用户登录
 // @Description	用户登录
 // @Tags 用户
-// @Accept	json
+// @Accept	mpfd
 // @Produce	json
-// @Param	body	body	User	true	"用户信息"
+// @Param	name		formData	string	true	"用户名"
+// @Param	password	formData	string	true	"密码"
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
 // @Router	/go/account/login	[post]
@@ -60,7 +62,7 @@ func loginAccount(c *gin.Context) {
 		ret   bool
 	)
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBind(&user); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}
@@ -86,7 +88,7 @@ func loginAccount(c *gin.Context) {
 // @Description	查看用户信息
 // @Tags 用户
 // @Security ApiKeyAuth
-// @Accept	json
+// @Accept	mpfd
 // @Produce	json
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"

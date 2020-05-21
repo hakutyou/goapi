@@ -37,10 +37,10 @@ func (hashP *password) doHash(salt []byte) (err error) {
 type User struct {
 	gorm.Model
 
-	Name     string   `binding:"required" json:"name" gorm:"index;unique;not null;size:32" example:"hakutyou"`
-	Password password `binding:"required" json:"password" gorm:"size:255" example:"myPassword"`
-	Salt     []byte   `json:"-" gorm:"size:64"`
-	Status   bool     `json:"-"`
+	Name     string   `binding:"required" form:"name" json:"name" gorm:"index;unique;not null;size:32" example:"hakutyou"`
+	Password password `binding:"required" form:"password" json:"password" gorm:"size:255" example:"myPassword"`
+	Salt     []byte   `form:"-" json:"-" gorm:"size:64"`
+	Status   bool     `form:"-" json:"-"`
 }
 
 func Models(gormdb *gorm.DB) {

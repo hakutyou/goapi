@@ -1,6 +1,7 @@
 package demo
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/hakutyou/goapi/utils"
@@ -9,15 +10,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary	获取 Redis 缓存
+// @Description	获取 Redis 缓存
+// @Tags Demo
+// @Accept	mpfd
+// @Produce	json
+// @Param	key		query	string	true	"键"
+// @Param	once	query	bool	false	"是否删除"
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/demo/cache	[get]
 func GetCache(c *gin.Context) {
 	var getCacheRequest = struct {
-		Key  string `binding:"required" json:"key"`
-		Once bool   `json:"once,default=true"`
+		Key  string `binding:"required" form:"key" json:"key"`
+		Once bool   `form:"once" json:"once"`
 	}{ // 默认值
 		Once: true,
 	}
 	// 获取参数
-	if err := c.ShouldBindJSON(&getCacheRequest); err != nil {
+	if err := c.ShouldBind(&getCacheRequest); err != nil {
+		fmt.Printf("%v\n", err)
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}
@@ -41,13 +53,23 @@ func GetCache(c *gin.Context) {
 	return
 }
 
+// @Summary	设置 Redis 缓存
+// @Description	设置 Redis 缓存
+// @Tags Demo
+// @Accept	mpfd
+// @Produce	json
+// @Param	key		formData	string	true	"键"
+// @Param	value	formData	string	true	"值"
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/demo/cache	[post]
 func SetCache(c *gin.Context) {
 	var setCacheRequest = struct {
-		Key   string `binding:"required" json:"key"`
-		Value string `binding:"required" json:"value"`
+		Key   string `binding:"required" form:"key" json:"key"`
+		Value string `binding:"required" form:"value" json:"value"`
 	}{}
 
-	if err := c.ShouldBindJSON(&setCacheRequest); err != nil {
+	if err := c.ShouldBind(&setCacheRequest); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}
