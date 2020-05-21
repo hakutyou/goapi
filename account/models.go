@@ -2,10 +2,11 @@ package account
 
 import (
 	"encoding/hex"
+	"math/rand"
+
 	"github.com/hakutyou/goapi/utils"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/sha3"
-	"math/rand"
 )
 
 type password string
@@ -13,19 +14,6 @@ type password string
 func (password) MarshalJSON() ([]byte, error) {
 	return []byte(`"x"`), nil
 }
-
-// func (p *password) UnmarshalJSON(data []byte) error {
-// 	h := make([]byte, 64)
-// 	c1 := sha3.NewShake256()
-// 	if _, err := c1.Write(data); err != nil {
-// 		return err
-// 	}
-// 	if _, err := c1.Read(h); err != nil {
-// 		return err
-// 	}
-// 	*p = password(hex.EncodeToString(h))
-// 	return nil
-// }
 
 func generateSalt(len int) (bytes []byte) {
 	bytes = make([]byte, len)
@@ -46,6 +34,19 @@ func (hashP *password) doHash(salt []byte) (err error) {
 	return nil
 }
 
+type User struct {
+	gorm.Model
+
+	Name     string   `binding:"required" json:"name" gorm:"index;unique;not null;size:32" example:"hakutyou"`
+	Password password `binding:"required" json:"password" gorm:"size:255" example:"myPassword"`
+	Salt     []byte   `json:"-" gorm:"size:64"`
+	Status   bool     `json:"-"`
+}
+
+func Models(gormdb *gorm.DB) {
+	gormdb.AutoMigrate(&User{})
+}
+
 func (u User) doValidate(p password) (ret bool) {
 	ret = false
 
@@ -61,20 +62,7 @@ func (u User) doValidate(p password) (ret bool) {
 	return
 }
 
-type User struct {
-	gorm.Model
-
-	Name     string   `binding:"required" json:"name" gorm:"index;unique;not null;size:32"`
-	Password password `binding:"required" json:"password" gorm:"size:255"`
-	Salt     []byte   `json:"-" gorm:"size:64"`
-	Status   bool     `json:"status"`
-}
-
-func Models(gormdb *gorm.DB) {
-	gormdb.AutoMigrate(&User{})
-}
-
-func (u User) Login() (user User, ret bool) {
+func (u User) login() (user User, ret bool) {
 	ret = false
 	db.Select("id").Where(User{Name: u.Name, Status: true}).First(&user)
 	if user.ID <= 0 {
@@ -85,7 +73,7 @@ func (u User) Login() (user User, ret bool) {
 	return
 }
 
-func GetUserInfo(userID uint) (user User, ret bool) {
+func getUserInfo(userID uint) (user User, ret bool) {
 	ret = false
 	db.First(&user, userID)
 	if user.Name != "" {
@@ -94,6 +82,6 @@ func GetUserInfo(userID uint) (user User, ret bool) {
 	return
 }
 
-func (u User) GenerateToken() (string, error) {
+func (u User) generateToken() (string, error) {
 	return utils.GenerateToken(u.ID)
 }

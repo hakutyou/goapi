@@ -1,4 +1,6 @@
 /.idea
 /vendor
+/docs
 /gorm.db
-/.env
+/.config.yaml
+/.zap.yaml

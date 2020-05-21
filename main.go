@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -17,37 +16,43 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/joho/godotenv"
+	_ "github.com/swaggo/gin-swagger"
+	_ "github.com/swaggo/gin-swagger/swaggerFiles"
 	"go.uber.org/zap"
+	"gopkg.in/yaml.v2"
 )
 
 func init() {
 	// 读取配置文件
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic("无法读取 .env 文件")
+	if err := LoadConfigure(); err != nil {
+		panic(fmt.Sprintf("无法读取配置文件: %v\n", err))
 	}
 
 	// JWT 配置
-	utils.SetEnvironment(os.Getenv("JWT_SECRET"))
+	utils.SetEnvironment(v.GetString("JWT_SECRET"))
 
 	// 数据库配置
 	openDB()
 	defer closeDB()
 
 	// gin
-	gin.SetMode(os.Getenv("RUN_MODE"))
+	gin.SetMode(v.GetString("RUN_MODE"))
 	r = gin.New()
 
-	MiddleWare() // 中间件
-	Migrations() // 数据库迁移
-	Route()      // 路由
+	MiddleWare()                // 中间件
+	Migrations()                // 数据库迁移
+	Route(v.GetBool("SWAGGER")) // 路由
 }
 
+// @title GoAPI
+// @version 0.0.1
+// @description Gin 的一些 demo
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	// 日志
 	openLogger()
@@ -95,41 +100,6 @@ func main() {
 	sugar.Info("Server exiting")
 }
 
-func openDB() {
-	var (
-		err     error
-		command string
-	)
-
-	database := os.Getenv("DATABASE")
-	dbUsername := os.Getenv("DB_USERNAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbDatabase := os.Getenv("DB_DATABASE")
-	if database == "mysql" {
-		command = fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-			dbUsername, dbPassword, dbHost, dbPort, dbDatabase)
-	} else if database == "postgres" {
-		command = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
-			dbHost, dbPort, dbUsername, dbPassword, dbDatabase)
-	} else {
-		database = "sqlite3"
-		command = "./gorm.db"
-	}
-
-	db, err = gorm.Open(database, command)
-	if err != nil {
-		panic(err)
-	} else {
-		db.SingularTable(true)
-	}
-}
-
-func closeDB() {
-	_ = db.Close()
-}
-
 func openRedis() {
 	var err error
 
@@ -144,16 +114,15 @@ func closeRedis() {
 }
 
 func openLogger() {
-	var (
-		err error
-		cfg zap.Config
-	)
+	var cfg zap.Config
 
-	zapConfig, _ := ioutil.ReadFile("zap.config")
-	if err = json.Unmarshal(zapConfig, &cfg); err != nil {
+	zapConfig, _ := ioutil.ReadFile(".zap.yaml")
+	_ = yaml.Unmarshal(zapConfig, &cfg)
+
+	if err := yaml.Unmarshal(zapConfig, &cfg); err != nil {
 		panic(err)
 	}
-	logger, _ := cfg.Build() // zap.NewProduction()
+	logger, _ := cfg.Build()
 	sugar = logger.Sugar()
 }
 

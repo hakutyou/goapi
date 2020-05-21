@@ -12,7 +12,8 @@ go mod vendor
 
 * 配置
 #+BEGIN_SRC bash
-cp script/debug.env .env
+cp script/debug.yaml .config.yaml
+cp script/zap.yaml .zap.yaml
 # 修改 .env 文件
 #+END_SRC
 
@@ -33,4 +34,20 @@ r = gin.Default()
 或者使用环境变量
 #+BEGIN_SRC bash
 GIN_MODE=release go run main.go
+#+END_SRC
+
+* Swagger
+** 安装
+#+BEGIN_SRC bash
+# 安装 swag
+go get -u github.com/swaggo/swag/cmd/swag
+cd $GOPATH/src/github.com/swaggo/swag/cmd/swag
+go install
+# 验证安装
+swag -v
+#+END_SRC
+
+** 部署
+#+BEGIN_SRC bash
+swag init
 #+END_SRC

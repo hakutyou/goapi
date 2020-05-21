@@ -8,6 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary	创建用户
+// @Description	创建用户
+// @Tags 用户
+// @Accept	json
+// @Produce	json
+// @Param	body	body	User	true	"用户信息"
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/account/	[post]
 func createAccount(c *gin.Context) {
 	user := User{
 		Status: true,
@@ -30,10 +39,19 @@ func createAccount(c *gin.Context) {
 		utils.Response(c, http.StatusBadRequest, 100, driverErr)
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", user)
 	return
 }
 
+// @Summary	用户登录
+// @Description	用户登录
+// @Tags 用户
+// @Accept	json
+// @Produce	json
+// @Param	body	body	User	true	"用户信息"
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/account/login	[post]
 func loginAccount(c *gin.Context) {
 	var (
 		user  User
@@ -47,14 +65,14 @@ func loginAccount(c *gin.Context) {
 		return
 	}
 
-	user, ret = user.Login()
+	user, ret = user.login()
 	if ret == false {
 		utils.Response(c, http.StatusUnauthorized, -1, "用户名或密码错误")
 		return
 	}
 
 	// 生成 jwt token
-	if token, err = user.GenerateToken(); err != nil {
+	if token, err = user.generateToken(); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
 		return
 	}
@@ -64,13 +82,22 @@ func loginAccount(c *gin.Context) {
 	return
 }
 
+// @Summary	查看用户信息
+// @Description	查看用户信息
+// @Tags 用户
+// @Security ApiKeyAuth
+// @Accept	json
+// @Produce	json
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/account/userinfo/	[get]
 func getUserinfo(c *gin.Context) {
 	var (
 		user User
 		ret  bool
 	)
 	userID := c.MustGet("user_id").(uint)
-	user, ret = GetUserInfo(userID)
+	user, ret = getUserInfo(userID)
 	if ret == false {
 		utils.Response(c, http.StatusUnauthorized, -1, "登录信息无效")
 		return

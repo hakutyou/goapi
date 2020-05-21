@@ -1,0 +1,15 @@
+# .config.yaml example
+
+RUN_MODE: debug
+
+JWT_SECRET: f7cb1f66-ebe0-4d1d-9095-7d36a42f95b0
+
+SWAGGER: true
+
+DATABASE:
+  ENGINE: mysql
+  HOST: localhost
+  PORT: '3306'
+  USERNAME: root
+  PASSWORD: 1iann
+  SCHEMA: goapi

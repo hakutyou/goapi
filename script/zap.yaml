@@ -1,0 +1,26 @@
+# .zap.yaml example
+
+level: debug
+
+development: true
+
+encoding: json
+
+encoderConfig:
+  messageKey: msg
+  levelKey: level
+  timeKey: ts
+  stacktraceKey: stacktrace
+  lineEnding: "\n"
+  levelEncoder: lowercase
+  timeEncoder: ISO8601
+  durationEncoder: ''
+
+outputPaths:
+  - stdout
+
+errorOutputPaths:
+  - stderr
+
+initialFields:
+  project: goapi
