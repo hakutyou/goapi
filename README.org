@@ -36,6 +36,14 @@ r = gin.Default()
 GIN_MODE=release go run main.go
 #+END_SRC
 
+编译运行
+#+BEGIN_SRC bash
+# 确保编译环境和正式环境的 GLIBC 版本一致
+# 可以通过 `ldd --version` 查看
+go build main.go
+./goapi
+#+END_SRC
+
 * Swagger
 ** 安装
 #+BEGIN_SRC bash

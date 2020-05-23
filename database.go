@@ -10,6 +10,7 @@ import (
 type redisConfig struct {
 	Host string `yaml:"HOST"`
 	Port string `yaml:"PORT"`
+	Password string `yaml:"PASSWORD"`
 }
 
 type databaseConfig struct {
@@ -32,7 +33,7 @@ func openRedis() {
 	}
 
 	conn, err = redis.Dial("tcp", fmt.Sprintf("%s:%s",
-		cfg.Host, cfg.Port))
+		cfg.Host, cfg.Port), redis.DialPassword(cfg.Password))
 	if err != nil {
 		panic(err)
 	}
