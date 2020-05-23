@@ -17,3 +17,5 @@ DATABASE:
 REDIS:
   HOST: localhost
   PORT: '6379'
+  INDEX: 1
+  PASSWORD: ''
