@@ -5,3 +5,4 @@
 /.zap.yaml
 /docs/*
 !/docs/keeps.go
+/goapi

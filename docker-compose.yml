@@ -1,0 +1,19 @@
+version: '3'
+
+networks:
+  base-net:
+    external: true
+services:
+  api:
+    image: hakutyou/ubuntu:tuna
+    restart: always
+    hostname: goapi
+    working_dir: /app/api
+    # command: tail -f /dev/null
+    command: ./run.sh
+    volumes:
+      - ./:/app/api/
+    networks:
+      base-net:
+        ipv4_address: 172.18.0.79
+
