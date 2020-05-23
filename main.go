@@ -14,7 +14,6 @@ import (
 	"github.com/hakutyou/goapi/middleware"
 	"github.com/hakutyou/goapi/utils"
 
-	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -98,19 +97,6 @@ func main() {
 		sugar.Info("Server Shutdown: ", err)
 	}
 	sugar.Info("Server exiting")
-}
-
-func openRedis() {
-	var err error
-
-	conn, err = redis.Dial("tcp", "127.0.0.1:6379")
-	if err != nil {
-		panic(err)
-	}
-}
-
-func closeRedis() {
-	conn.Close()
 }
 
 func openLogger() {

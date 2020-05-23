@@ -13,3 +13,7 @@ DATABASE:
   USERNAME: root
   PASSWORD: 1iann
   SCHEMA: goapi
+
+REDIS:
+  HOST: localhost
+  PORT: '6379'

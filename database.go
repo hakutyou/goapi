@@ -3,8 +3,14 @@ package main
 import (
 	"fmt"
 
+	"github.com/garyburd/redigo/redis"
 	"github.com/jinzhu/gorm"
 )
+
+type redisConfig struct {
+	Host string `yaml:"HOST"`
+	Port string `yaml:"PORT"`
+}
 
 type databaseConfig struct {
 	Engine   string `yaml:"ENGINE"`
@@ -13,6 +19,27 @@ type databaseConfig struct {
 	Username string `yaml:"USERNAME"`
 	Password string `yaml:"PASSWORD"`
 	Schema   string `yaml:"SCHEMA"`
+}
+
+func openRedis() {
+	var (
+		err error
+		cfg redisConfig
+	)
+
+	if err := v.UnmarshalKey("REDIS", &cfg); err != nil {
+		panic(err)
+	}
+
+	conn, err = redis.Dial("tcp", fmt.Sprintf("%s:%s",
+		cfg.Host, cfg.Port))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func closeRedis() {
+	conn.Close()
 }
 
 func openDB() {
