@@ -5,6 +5,7 @@ import (
 	"math/rand"
 
 	"github.com/hakutyou/goapi/utils"
+
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/sha3"
 )

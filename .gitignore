@@ -1,6 +1,7 @@
 /.idea
 /vendor
-/docs
 /gorm.db
 /.config.yaml
 /.zap.yaml
+/docs/*
+!/docs/keeps.go
