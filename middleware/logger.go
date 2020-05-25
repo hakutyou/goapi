@@ -25,17 +25,21 @@ func LoggerMiddleware(c *gin.Context) {
 	if requestId == "" {
 		requestId = uuid.NewV4().String()
 	}
+	c.Set("request_id", requestId)
 
 	// 打印接收内容
 	data, err := c.GetRawData()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
 	sugar.Infow("接收请求",
 		"request_id", requestId,
+		"type", c.GetHeader("Content-Type"),
 		"path", c.Request.URL,
 		"method", c.Request.Method,
-		"body", string(data))
+		// TODO: 待优化, 截断过长的字段
+		"body", string(data[:200]))
 	// 记录返回
 	w := responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
 	c.Writer = &w

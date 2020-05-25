@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/hakutyou/goapi/services"
 	"github.com/hakutyou/goapi/utils"
 
 	"github.com/garyburd/redigo/redis"
@@ -20,7 +21,7 @@ import (
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
 // @Router	/go/demo/cache	[get]
-func GetCache(c *gin.Context) {
+func getCache(c *gin.Context) {
 	var getCacheRequest = struct {
 		Key  string `binding:"required" form:"key" json:"key"`
 		Once bool   `form:"once" json:"once"`
@@ -63,7 +64,7 @@ func GetCache(c *gin.Context) {
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
 // @Router	/go/demo/cache	[post]
-func SetCache(c *gin.Context) {
+func setCache(c *gin.Context) {
 	var setCacheRequest = struct {
 		Key   string `binding:"required" form:"key" json:"key"`
 		Value string `binding:"required" form:"value" json:"value"`
@@ -80,5 +81,40 @@ func SetCache(c *gin.Context) {
 	}
 
 	utils.Response(c, http.StatusOK, 0, "操作成功")
+	return
+}
+
+// @Summary	识别图片
+// @Description	识别图片
+// @Tags Demo
+// @Accept	mpfd
+// @Produce	json
+// @Param	image			formData	string	true	"图片的 base64 形式"
+// @Param	id_card_side	formData	string	true	"front/back 表示 照片面/国徽面"
+// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
+// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
+// @Router	/go/demo/cache	[post]
+func idCardRecognize(c *gin.Context) {
+	var setRequest = struct {
+		Image      string `form:"image" json:"image"`
+		IdCardSide string `form:"id_card_side" json:"id_card_side"`
+	}{}
+
+	if err := c.ShouldBind(&setRequest); err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
+		return
+	}
+
+	baiduApi := services.BaiduApi{
+		ApiKey:    "o3coIGSVSeQy1Sdz2p6mC8Xw",
+		SecretKey: "7K9WuRQO8blb436FHArObDU30M1RSbWN",
+	}
+	retJson, err := baiduApi.IdCardRecognition(c.MustGet("request_id").(string), setRequest.Image, setRequest.IdCardSide)
+	if err != nil {
+		utils.Response(c, http.StatusBadRequest, 99, fmt.Sprintf("服务器繁忙 - (%s)", err.Error()))
+		return
+	}
+
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", retJson)
 	return
 }

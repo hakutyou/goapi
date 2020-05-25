@@ -5,6 +5,8 @@ import (
 )
 
 func Routes(r *gin.RouterGroup) {
-	r.GET("/cache", GetCache)
-	r.POST("/cache", SetCache)
+	r.GET("/cache", getCache)
+	r.POST("/cache", setCache)
+
+	r.POST("/id_card", idCardRecognize)
 }

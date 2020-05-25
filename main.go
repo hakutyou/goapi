@@ -57,6 +57,7 @@ func main() {
 	openLogger()
 	defer closeLogger()
 
+	utils.SetLogger(sugar)
 	middleware.SetLogger(sugar)
 
 	// 连接数据库

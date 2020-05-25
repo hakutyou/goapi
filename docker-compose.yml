@@ -16,4 +16,3 @@ services:
     networks:
       base-net:
         ipv4_address: 172.18.0.79
-
