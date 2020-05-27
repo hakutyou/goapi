@@ -2,7 +2,7 @@ package utils
 
 import "github.com/asmcos/requests"
 
-func ServiceRequest(requestId string, url string, data requests.Datas) (retJson map[string]interface{}, err error) {
+func ServiceRequest(requestId string, method string, url string, data requests.Datas) (retJson map[string]interface{}, err error) {
 	var resp *requests.Response
 
 	sugar.Infow("发送请求",
@@ -11,10 +11,10 @@ func ServiceRequest(requestId string, url string, data requests.Datas) (retJson 
 		"method", "POST",
 		"body", data)
 
-	if data == nil {
-		resp, err = requests.Post(url)
-	} else {
+	if method == "post" {
 		resp, err = requests.Post(url, data)
+	} else {
+		resp, err = requests.Get(url, data)
 	}
 
 	if err != nil {

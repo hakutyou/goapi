@@ -8,19 +8,19 @@ import (
 )
 
 type redisConfig struct {
-	Index    int    `yaml:"INDEX"`
-	Host     string `yaml:"HOST"`
-	Port     string `yaml:"PORT"`
-	Password string `yaml:"PASSWORD"`
+	Index    int    `yaml:"Index"`
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	Password string `yaml:"Password"`
 }
 
 type databaseConfig struct {
-	Engine   string `yaml:"ENGINE"`
-	Host     string `yaml:"HOST"`
-	Port     string `yaml:"PORT"`
-	Username string `yaml:"USERNAME"`
-	Password string `yaml:"PASSWORD"`
-	Schema   string `yaml:"SCHEMA"`
+	Engine   string `yaml:"Engine"`
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	Username string `yaml:"Username"`
+	Password string `yaml:"Password"`
+	Schema   string `yaml:"Schema"`
 }
 
 func openRedis() {

@@ -1,4 +1,4 @@
-#+TITLE: GoApi (gin 的一些 demo)
+#+TITLE: GoApi 通用 API 接口 (gin 的一些 demo)
 #+AUTHOR: 白鳥鵠
 #+DATE: 2020-05-11
 
@@ -58,4 +58,15 @@ swag -v
 ** 部署
 #+BEGIN_SRC bash
 swag init
+#+END_SRC
+
+* Git
+** 添加子项目
+#+BEGIN_SRC bash
+git submodule init
+git submodule add git@e.coding.net:hakutyou/goapi_script.git script
+
+# 远程拉取
+git submodule init
+git submodule update
 #+END_SRC

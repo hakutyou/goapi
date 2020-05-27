@@ -12,6 +12,7 @@ import (
 	"github.com/hakutyou/goapi/account"
 	"github.com/hakutyou/goapi/demo"
 	"github.com/hakutyou/goapi/middleware"
+	"github.com/hakutyou/goapi/services"
 	"github.com/hakutyou/goapi/utils"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,9 @@ func init() {
 	openDB()
 	defer closeDB()
 
+	// API 服务配置
+	openBaiduOcrService()
+
 	// gin
 	gin.SetMode(v.GetString("RUN_MODE"))
 	r = gin.New()
@@ -57,6 +61,7 @@ func main() {
 	openLogger()
 	defer closeLogger()
 
+	services.SetLogger(sugar)
 	utils.SetLogger(sugar)
 	middleware.SetLogger(sugar)
 
@@ -70,6 +75,7 @@ func main() {
 	openRedis()
 	defer closeRedis()
 
+	services.SetRedis(conn)
 	demo.SetRedis(conn)
 
 	// 运行 gin

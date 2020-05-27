@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hakutyou/goapi/services"
 	"github.com/hakutyou/goapi/utils"
 
 	"github.com/garyburd/redigo/redis"
@@ -84,8 +83,8 @@ func setCache(c *gin.Context) {
 	return
 }
 
-// @Summary	识别图片
-// @Description	识别图片
+// @Summary	识别身份证
+// @Description	识别身份证
 // @Tags Demo
 // @Accept	mpfd
 // @Produce	json
@@ -105,11 +104,7 @@ func idCardRecognize(c *gin.Context) {
 		return
 	}
 
-	baiduApi := services.BaiduApi{
-		ApiKey:    "o3coIGSVSeQy1Sdz2p6mC8Xw",
-		SecretKey: "7K9WuRQO8blb436FHArObDU30M1RSbWN",
-	}
-	retJson, err := baiduApi.IdCardRecognition(c.MustGet("request_id").(string), setRequest.Image, setRequest.IdCardSide)
+	retJson, err := baiduOcr.IdCardRecognition(c.MustGet("request_id").(string), setRequest.Image, setRequest.IdCardSide)
 	if err != nil {
 		utils.Response(c, http.StatusBadRequest, 99, fmt.Sprintf("服务器繁忙 - (%s)", err.Error()))
 		return
