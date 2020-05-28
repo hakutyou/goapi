@@ -2,7 +2,7 @@ package demo
 
 import (
 	"github.com/garyburd/redigo/redis"
-	"github.com/hakutyou/goapi/services"
+	"github.com/hakutyou/goapi/web/services"
 )
 
 var (

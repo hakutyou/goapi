@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hakutyou/goapi/utils"
+	"github.com/hakutyou/goapi/web/utils"
 
 	"github.com/asmcos/requests"
+	"github.com/garyburd/redigo/redis"
 )
 
 const baiduApiBaseUrl string = "https://aip.baidubce.com"
@@ -22,10 +23,10 @@ func (api BaiduApi) getAccessToken(requestId string) (accessToken string, err er
 		retJson map[string]interface{}
 	)
 	// 查询 Redis 缓存
-	// accessToken, err = redis.String(conn.Do("GET", "BAIDU_OCR_ACCESS_TOKEN"))
-	// if err == nil {
-	// 	return
-	// }
+	accessToken, err = redis.String(conn.Do("GET", "BAIDU_OCR_ACCESS_TOKEN"))
+	if err == nil {
+		return
+	}
 
 	retJson, err = utils.ServiceRequest(requestId, "post",
 		fmt.Sprintf(

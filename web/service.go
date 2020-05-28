@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/hakutyou/goapi/demo"
-	"github.com/hakutyou/goapi/services"
+	"github.com/hakutyou/goapi/web/demo"
+	"github.com/hakutyou/goapi/web/services"
 )
 
 var cfgBaiduOcr services.BaiduApi

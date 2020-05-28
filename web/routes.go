@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/hakutyou/goapi/account"
-	"github.com/hakutyou/goapi/demo"
-	_ "github.com/hakutyou/goapi/docs"
-	"github.com/hakutyou/goapi/middleware"
+	"github.com/hakutyou/goapi/web/account"
+	"github.com/hakutyou/goapi/web/demo"
+	_ "github.com/hakutyou/goapi/web/docs"
+	"github.com/hakutyou/goapi/web/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"

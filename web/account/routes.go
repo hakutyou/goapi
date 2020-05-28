@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/hakutyou/goapi/middleware/auth"
+	"github.com/hakutyou/goapi/web/middleware/auth"
 
 	"github.com/gin-gonic/gin"
 )

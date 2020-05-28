@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/hakutyou/goapi/utils"
+	"github.com/hakutyou/goapi/web/utils"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"

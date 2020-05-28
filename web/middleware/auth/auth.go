@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hakutyou/goapi/utils"
+	"github.com/hakutyou/goapi/web/utils"
 
 	"github.com/gin-gonic/gin"
 )

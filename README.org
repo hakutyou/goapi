@@ -2,46 +2,29 @@
 #+AUTHOR: 白鳥鵠
 #+DATE: 2020-05-11
 
-* 安装依赖
+* Quick Start
 #+BEGIN__SRC bash
 # 增加缺失的包, 移除没用的包
 go mod tidy
 # 把依赖拷贝到 ./vendor/ 下
 go mod vendor
-#+END_SRC
-
-* 配置
-#+BEGIN_SRC bash
-cp script/debug.yaml .config.yaml
+# 配置
+# debug 模式使用 script/debug.yaml
+cp script/release.yaml .config.yaml
 cp script/zap.yaml .zap.yaml
-# 修改 .env 文件
 #+END_SRC
 
-* 运行
-Debug 模式直接运行
+- 运行
 #+BEGIN_SRC bash
-go run main.go
+go run ./web
 #+END_SRC
 
-Release 模式添加以下内容
-#+BEGIN_SRC golang
-// gin start
-gin.SetMode(gin.ReleaseMode)
-r = gin.Default()
-// ....
-#+END_SRC
-
-或者使用环境变量
-#+BEGIN_SRC bash
-GIN_MODE=release go run main.go
-#+END_SRC
-
-编译运行
+- 编译运行
 #+BEGIN_SRC bash
 # 确保编译环境和正式环境的 GLIBC 版本一致
 # 可以通过 `ldd --version` 查看
-go build main.go
-./goapi
+go build ./web
+./web
 #+END_SRC
 
 * Swagger
@@ -57,6 +40,7 @@ swag -v
 
 ** 部署
 #+BEGIN_SRC bash
+cd web
 swag init
 #+END_SRC
 
@@ -70,3 +54,21 @@ git submodule add git@e.coding.net:hakutyou/goapi_script.git script
 git submodule init
 git submodule update
 #+END_SRC
+
+* 其他问题
+** Golang
+- 代理
+#+BEGIN_EXAMPLE
+https://goproxy.cn
+#+END_EXAMPLE
+
+** Mariadb
+- 创建数据库
+#+BEGIN_SRC mysql
+create database api default character set utf8mb4 collate utf8mb4_unicode_ci;
+#+END_SRC
+
+- PyCharm 无法连接尝试使用以下 URL 确定时区信息
+#+BEGIN_EXAMPLE
+jdbc:mysql://localhost:3306/goapi?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+#+END_EXAMPLE

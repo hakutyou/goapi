@@ -9,11 +9,11 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/hakutyou/goapi/account"
-	"github.com/hakutyou/goapi/demo"
-	"github.com/hakutyou/goapi/middleware"
-	"github.com/hakutyou/goapi/services"
-	"github.com/hakutyou/goapi/utils"
+	"github.com/hakutyou/goapi/web/account"
+	"github.com/hakutyou/goapi/web/demo"
+	"github.com/hakutyou/goapi/web/middleware"
+	"github.com/hakutyou/goapi/web/services"
+	"github.com/hakutyou/goapi/web/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"

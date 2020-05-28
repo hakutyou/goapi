@@ -41,7 +41,7 @@ func openRedis() {
 }
 
 func closeRedis() {
-	conn.Close()
+	_ = conn.Close()
 }
 
 func openDB() {
