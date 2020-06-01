@@ -39,7 +39,7 @@ func LoggerMiddleware(c *gin.Context) {
 		"path", c.Request.URL,
 		"method", c.Request.Method,
 		// TODO: 待优化, 截断过长的字段
-		"body", string(data[:200]))
+		"body", string(data))
 	// 记录返回
 	w := responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
 	c.Writer = &w

@@ -1,9 +1,15 @@
 #+TITLE: GoApi 通用 API 接口 (gin 的一些 demo)
 #+AUTHOR: 白鳥鵠
 #+DATE: 2020-05-11
+#+OPTIONS: ^:{}
+
+* TODO
+- [X] 异步 (Async)
+- [X] json 代理
+- [ ] 可能把 requests 移除, 好像用 net/http 就够了
 
 * Quick Start
-#+BEGIN__SRC bash
+#+BEGIN_SRC bash
 # 增加缺失的包, 移除没用的包
 go mod tidy
 # 把依赖拷贝到 ./vendor/ 下
@@ -16,6 +22,8 @@ cp script/zap.yaml .zap.yaml
 
 - 运行
 #+BEGIN_SRC bash
+# consumer 为 Asynq 的 worker
+go run ./consumer
 go run ./web
 #+END_SRC
 
@@ -23,6 +31,9 @@ go run ./web
 #+BEGIN_SRC bash
 # 确保编译环境和正式环境的 GLIBC 版本一致
 # 可以通过 `ldd --version` 查看
+go build ./consumer
+./consumer
+
 go build ./web
 ./web
 #+END_SRC

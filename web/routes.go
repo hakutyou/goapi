@@ -4,6 +4,7 @@ import (
 	"github.com/hakutyou/goapi/web/account"
 	"github.com/hakutyou/goapi/web/demo"
 	_ "github.com/hakutyou/goapi/web/docs"
+	"github.com/hakutyou/goapi/web/external"
 	"github.com/hakutyou/goapi/web/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,7 @@ func Route(swagger bool) {
 	// 路由
 	demo.Routes(r.Group("/go/demo"))
 	account.Routes(r.Group("/go/account"))
+	external.Routes(r.Group("/go/external"))
 }
 
 func MiddleWare() {

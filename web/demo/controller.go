@@ -8,6 +8,7 @@ import (
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/hibiken/asynq"
 )
 
 // @Summary	获取 Redis 缓存
@@ -111,5 +112,21 @@ func idCardRecognize(c *gin.Context) {
 	}
 
 	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", retJson)
+	return
+}
+
+func runAsynq(c *gin.Context) {
+	t1 := asynq.NewTask(
+		"send_welcome_email",
+		map[string]interface{}{"user_id": 42})
+	// 立即执行
+	err := client.Enqueue(t1)
+	// 延迟执行, 24 小时
+	// err = client.EnqueueIn(24*time.Hour, t2)
+	if err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
+		return
+	}
+	utils.Response(c, http.StatusOK, 0, "操作成功")
 	return
 }

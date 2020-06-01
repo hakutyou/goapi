@@ -4,11 +4,19 @@ import (
 	"fmt"
 
 	"github.com/garyburd/redigo/redis"
+	"github.com/hibiken/asynq"
 	"github.com/jinzhu/gorm"
 )
 
 type redisConfig struct {
 	Index    int    `yaml:"Index"`
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	Password string `yaml:"Password"`
+}
+
+type redisAsynqConfig struct {
+	Index    int    `yaml:"TaskIndex"`
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"Port"`
 	Password string `yaml:"Password"`
@@ -75,4 +83,18 @@ func openDB() {
 
 func closeDB() {
 	_ = db.Close()
+}
+
+func initAsynq() {
+	var cfg redisAsynqConfig
+
+	if err := v.UnmarshalKey("REDIS", &cfg); err != nil {
+		panic(err)
+	}
+
+	client = asynq.NewClient(asynq.RedisClientOpt{
+		Addr:     fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
+		Password: cfg.Password,
+		DB:       cfg.Index,
+	})
 }

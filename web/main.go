@@ -38,6 +38,9 @@ func init() {
 	openDB()
 	defer closeDB()
 
+	// asynq 配置
+	initAsynq()
+
 	// API 服务配置
 	openBaiduOcrService()
 
@@ -77,6 +80,9 @@ func main() {
 
 	services.SetRedis(conn)
 	demo.SetRedis(conn)
+
+	// 连接 Asynq
+	demo.SetAsynq(client)
 
 	// 运行 gin
 	// TODO: 需要一个热更新代码的方式, gracehttp

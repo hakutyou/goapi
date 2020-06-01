@@ -1,6 +1,10 @@
 package utils
 
-import "github.com/asmcos/requests"
+import (
+	"bytes"
+	"github.com/asmcos/requests"
+	"net/http"
+)
 
 func ServiceRequest(requestId string, method string, url string, data requests.Datas) (retJson map[string]interface{}, err error) {
 	var resp *requests.Response
@@ -26,5 +30,38 @@ func ServiceRequest(requestId string, method string, url string, data requests.D
 	sugar.Infow("返回发送请求",
 		"request_id", requestId,
 		"body", resp.Text())
+	return
+}
+
+func ServiceProxy(_ string, method string, url string, jsonStr string) (statusCode int, retPage string, err error) {
+	var (
+		resp *http.Response
+		req  *http.Request
+	)
+
+	if method == "post" {
+		req, err = http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
+		if err != nil {
+			return
+		}
+		req.Header.Set("Content-Type", "application/json")
+	} else {
+		req, err = http.NewRequest("GET", url, bytes.NewBuffer([]byte(jsonStr)))
+		if err != nil {
+			return
+		}
+	}
+
+	client := &http.Client{}
+	resp, err = client.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	// 获取返回
+	statusCode = resp.StatusCode
+	buf := new(bytes.Buffer)
+	_, _ = buf.ReadFrom(resp.Body)
+	retPage = buf.String()
 	return
 }
