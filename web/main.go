@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/hakutyou/goapi/web/external"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -64,6 +65,8 @@ func main() {
 	openLogger()
 	defer closeLogger()
 
+	account.SetLogger(sugar)
+	external.SetLogger(sugar)
 	services.SetLogger(sugar)
 	utils.SetLogger(sugar)
 	middleware.SetLogger(sugar)

@@ -1,7 +1,6 @@
 package external
 
 import (
-	"fmt"
 	"github.com/hakutyou/goapi/web/utils"
 	"net/http"
 
@@ -25,7 +24,6 @@ func doProxy(c *gin.Context) {
 	}
 	// 获取参数
 	if err := c.ShouldBind(&requestInfo); err != nil {
-		fmt.Printf("%v\n", err)
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}
@@ -33,6 +31,7 @@ func doProxy(c *gin.Context) {
 	statusCode, retText, err = utils.ServiceProxy(c.MustGet("request_id").(string),
 		requestInfo.Method, requestInfo.Url, requestInfo.Json)
 	if err != nil {
+		sugar.Error(err.Error())
 		return
 	}
 	c.String(statusCode, retText)

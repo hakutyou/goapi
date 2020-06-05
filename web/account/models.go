@@ -22,7 +22,7 @@ func generateSalt(len int) (bytes []byte) {
 	return
 }
 
-func (hashP *password) doHash(salt []byte) (err error) {
+func (hashP *password) doHash(salt []byte) error {
 	h := make([]byte, 64)
 	c1 := sha3.NewCShake256([]byte(""), salt)
 	if _, err := c1.Write([]byte(*hashP)); err != nil {
@@ -48,19 +48,17 @@ func Models(gormdb *gorm.DB) {
 	gormdb.AutoMigrate(&User{})
 }
 
-func (u User) doValidate(p password) (ret bool) {
-	ret = false
-
+func (u User) doValidate(p password) bool {
 	db.First(&u, u.ID)
 	if err := p.doHash(u.Salt); err != nil {
-		return
+		sugar.Error(err.Error())
+		return false
 	}
 
 	if u.Password != p {
-		return
+		return false
 	}
-	ret = true
-	return
+	return true
 }
 
 func (u User) login() (user User, ret bool) {

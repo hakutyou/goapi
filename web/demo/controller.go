@@ -30,7 +30,6 @@ func getCache(c *gin.Context) {
 	}
 	// 获取参数
 	if err := c.ShouldBind(&getCacheRequest); err != nil {
-		fmt.Printf("%v\n", err)
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
 		return
 	}

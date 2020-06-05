@@ -35,6 +35,7 @@ func (api BaiduApi) getAccessToken(requestId string) (accessToken string, err er
 
 	if err != nil {
 		accessToken = ""
+		sugar.Error(err.Error())
 		return
 	}
 
@@ -42,7 +43,6 @@ func (api BaiduApi) getAccessToken(requestId string) (accessToken string, err er
 	expiresIn := retJson["expires_in"].(float64)
 	// 存 Redis
 	if _, err := conn.Do("SET", "BAIDU_OCR_ACCESS_TOKEN", accessToken, "EX", int(expiresIn)); err != nil {
-		// 失败了就记录一条 Warning
 		sugar.Warnw("Redis 连接错误",
 			"message", err.Error())
 	}
@@ -81,7 +81,5 @@ func (api BaiduApi) IdCardRecognition(requestId string, image string, idCardSide
 		err = errors.New(errorMsg.(string))
 		return
 	}
-
-	err = nil
 	return
 }

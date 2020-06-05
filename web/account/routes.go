@@ -9,6 +9,9 @@ import (
 func Routes(r *gin.RouterGroup) {
 	r.POST("/", createAccount)
 	r.POST("/login", loginAccount)
+	r.GET("/captcha", captchaGet)
+	r.POST("/captcha", captchaVerify)
+	r.GET("/captcha/:source", captchaGetPng)
 
 	// 需要登录的接口
 	r_userinfo := r.Group("/userinfo")
