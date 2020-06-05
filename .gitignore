@@ -3,6 +3,8 @@
 /gorm.db
 /.config.yaml
 /.zap.yaml
-/docs/*
-!/docs/keeps.go
+/web/docs/*
+!/web/docs/keeps.go
 /goapi
+/web/web
+/consumer/consumer
