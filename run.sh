@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./consumer &
-./goapi
+./consumer/consumer &
+./web/web
