@@ -14,14 +14,14 @@ require (
 	github.com/hibiken/asynq v0.9.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/pelletier/go-toml v1.4.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/satori/go.uuid v1.2.0
+	github.com/smallnest/rpcx v0.0.0-20200604140806-03ce6c620eb8
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.6 // indirect
 	github.com/tencentcloud/tencentcloud-sdk-go v3.0.185+incompatible
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073
+	golang.org/x/crypto v0.0.0-20200423211502-4bdfaf469ed5
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/mod v0.2.0 // indirect
 	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect

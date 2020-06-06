@@ -1,7 +1,9 @@
 package demo
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/hakutyou/goapi/web/utils"
@@ -9,6 +11,7 @@ import (
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/hibiken/asynq"
+	rpcx "github.com/smallnest/rpcx/client"
 )
 
 // @Summary	获取 Redis 缓存
@@ -111,6 +114,42 @@ func idCardRecognize(c *gin.Context) {
 	}
 
 	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", retJson)
+	return
+}
+
+func rpcxDemo(c *gin.Context) {
+	type Args struct {
+		A int
+		B int
+	}
+	type Reply struct {
+		C int
+	}
+
+	d := rpcx.NewPeer2PeerDiscovery("tcp@localhost:8972", "")
+
+	xclient := rpcx.NewXClient("Arith", rpcx.Failtry, rpcx.RandomSelect, d, rpcx.DefaultOption)
+	defer xclient.Close()
+
+	args := &Args{
+		A: 10,
+		B: 20,
+	}
+	reply := &Reply{}
+	// err := xclient.Call(context.Background(), "Mul", args, reply)
+	call, err := xclient.Go(context.Background(), "Mul", args, reply, nil)
+	if err != nil {
+		log.Fatalf("failed to call: %v", err)
+	}
+	replyCall := <-call.Done
+
+	// if err != nil {
+	if replyCall.Error != nil {
+		log.Fatalf("failed to call: %v", err)
+	}
+
+	log.Printf("%d * %d = %d", args.A, args.B, reply.C)
+	utils.Response(c, http.StatusOK, 0, "操作成功")
 	return
 }
 
