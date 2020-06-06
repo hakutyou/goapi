@@ -12,6 +12,8 @@ func Routes(r *gin.RouterGroup) {
 	r.GET("/captcha", captchaGet)
 	r.POST("/captcha", captchaVerify)
 	r.GET("/captcha/:source", captchaGetPng)
+	r.GET("/sms_captcha", smsCaptchaGet)
+	r.POST("/sms_captcha", smsCaptchaVerify)
 
 	// 需要登录的接口
 	r_userinfo := r.Group("/userinfo")

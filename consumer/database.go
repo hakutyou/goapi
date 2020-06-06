@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/hibiken/asynq"
 	"github.com/spf13/viper"
 )
@@ -28,7 +29,5 @@ func openRedis() (err error) {
 		Password: cfg.Password,
 		DB:       cfg.Index,
 	}
-
-	err = nil
-	return
+	return nil
 }

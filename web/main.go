@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/hakutyou/goapi/web/external"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/hakutyou/goapi/web/account"
 	"github.com/hakutyou/goapi/web/demo"
+	"github.com/hakutyou/goapi/web/external"
 	"github.com/hakutyou/goapi/web/middleware"
 	"github.com/hakutyou/goapi/web/services"
 	"github.com/hakutyou/goapi/web/utils"
@@ -41,6 +41,12 @@ func init() {
 
 	// asynq 配置
 	initAsynq()
+
+	// 其他服务设置
+	if err := initServices(); err != nil {
+		panic(err)
+	}
+	account.SetTencentSms(tencentSms)
 
 	// API 服务配置
 	openBaiduOcrService()
@@ -130,4 +136,8 @@ func openLogger() {
 
 func closeLogger() {
 	_ = sugar.Sync()
+}
+
+func initServices() error {
+	return v.UnmarshalKey("TENCENT_SMS", &tencentSms)
 }

@@ -19,6 +19,7 @@ require (
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.6 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.185+incompatible
 	go.uber.org/zap v1.15.0
 	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect

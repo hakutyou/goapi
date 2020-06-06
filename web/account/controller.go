@@ -132,6 +132,38 @@ func captchaGetPng(c *gin.Context) {
 	ucaptcha.ServeHTTP(c.Writer, c.Request)
 }
 
+// @Summary	获取手机短信验证码
+// @Tags 用户
+// @Produce	json
+// @Router	/go/sms_captcha	[get]
+func smsCaptchaGet(c *gin.Context) {
+	var smsCaptchaGetRequest = struct {
+		Phone string `binding:"required" form:"phone" json:"phone"`
+	}{}
+	// 获取参数
+	if err := c.ShouldBind(&smsCaptchaGetRequest); err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
+		return
+	}
+
+	// 发送短信
+	if err := tencentSms.SendSms(smsCaptchaGetRequest.Phone); err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "发送失败")
+		return
+	}
+	utils.Response(c, http.StatusOK, 0, "发送成功")
+	return
+}
+
+// @Summary	检验手机短信验证码
+// @Tags 用户
+// @Accept	mpfd
+// @Produce	json
+// @Router	/go/sms_captcha	[post]
+func smsCaptchaVerify(c *gin.Context) {
+	return
+}
+
 // @Summary	查看用户信息
 // @Description	查看用户信息
 // @Tags 用户
