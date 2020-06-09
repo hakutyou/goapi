@@ -14,10 +14,13 @@
 go mod tidy
 # 把依赖拷贝到 ./vendor/ 下
 go mod vendor
-# 配置
+# 配置 yaml
 # debug 模式使用 script/debug.yaml
 cp script/release.yaml .config.yaml
 cp script/zap.yaml .zap.yaml
+
+# 设置 data
+cp data/sensitive.dat.orig data/sensitive.dat
 #+END_SRC
 
 - 运行

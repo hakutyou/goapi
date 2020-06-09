@@ -3,6 +3,7 @@ package demo
 import (
 	"context"
 	"fmt"
+	"github.com/hakutyou/goapi/web/utils/udfa"
 	"log"
 	"net/http"
 
@@ -86,6 +87,24 @@ func setCache(c *gin.Context) {
 	return
 }
 
+// @Summary	过滤敏感词
+// @Router	/go/demo/sensitive	[post]
+func sensitiveFilter(c *gin.Context) {
+	var setRequest = struct {
+		Word string `binding:"required" form:"word" json:"word"`
+	}{}
+
+	if err := c.ShouldBind(&setRequest); err != nil {
+		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
+		return
+	}
+
+	word := udfa.ChangeSensitiveWords(setRequest.Word)
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", gin.H{
+		"word": word,
+	})
+}
+
 // @Summary	识别身份证
 // @Description	识别身份证
 // @Tags Demo
@@ -98,8 +117,8 @@ func setCache(c *gin.Context) {
 // @Router	/go/demo/cache	[post]
 func idCardRecognize(c *gin.Context) {
 	var setRequest = struct {
-		Image      string `form:"image" json:"image"`
-		IdCardSide string `form:"id_card_side" json:"id_card_side"`
+		Image      string `binding:"required" form:"image" json:"image"`
+		IdCardSide string `binding:"required" form:"id_card_side" json:"id_card_side"`
 	}{}
 
 	if err := c.ShouldBind(&setRequest); err != nil {
