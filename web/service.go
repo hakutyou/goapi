@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hakutyou/goapi/web/demo"
+	"github.com/hakutyou/goapi/web/external"
 	"github.com/hakutyou/goapi/web/services"
 )
 
@@ -13,5 +13,5 @@ func openBaiduOcrService() {
 		panic(err)
 	}
 
-	demo.SetBaiduOcr(cfgBaiduOcr)
+	external.SetBaiduOcr(cfgBaiduOcr)
 }

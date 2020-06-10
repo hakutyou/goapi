@@ -1,9 +1,10 @@
-package udfa
+package DFA
 
 import (
-	"github.com/hakutyou/goapi/web/utils"
 	"io/ioutil"
 	"strings"
+
+	"github.com/hakutyou/goapi/rpcx/utils"
 )
 
 func init() {

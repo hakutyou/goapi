@@ -1,4 +1,4 @@
-package udfa
+package DFA
 
 var sensitiveWord = make(map[string]interface{})
 var Set = make(map[string]interface{})

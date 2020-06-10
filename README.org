@@ -43,6 +43,13 @@ go build ./web
 ./web
 #+END_SRC
 
+* RPCx
+** 安装
+#+BEGIN_SRC bash
+# 使用 tags 安装
+go get -u -v -tags "etcd ping" github.com/smallnest/rpcx/...
+#+END_SRC
+
 * Swagger
 ** 安装
 #+BEGIN_SRC bash

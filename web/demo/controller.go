@@ -1,18 +1,11 @@
 package demo
 
 import (
-	"context"
-	"fmt"
-	"github.com/hakutyou/goapi/web/utils/udfa"
-	"log"
 	"net/http"
-
-	"github.com/hakutyou/goapi/web/utils"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/hibiken/asynq"
-	rpcx "github.com/smallnest/rpcx/client"
+	"github.com/hakutyou/goapi/web/utils"
 )
 
 // @Summary	获取 Redis 缓存
@@ -83,112 +76,6 @@ func setCache(c *gin.Context) {
 		return
 	}
 
-	utils.Response(c, http.StatusOK, 0, "操作成功")
-	return
-}
-
-// @Summary	过滤敏感词
-// @Router	/go/demo/sensitive	[post]
-func sensitiveFilter(c *gin.Context) {
-	var setRequest = struct {
-		Word string `binding:"required" form:"word" json:"word"`
-	}{}
-
-	if err := c.ShouldBind(&setRequest); err != nil {
-		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
-		return
-	}
-
-	word := udfa.ChangeSensitiveWords(setRequest.Word)
-	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", gin.H{
-		"word": word,
-	})
-}
-
-// @Summary	识别身份证
-// @Description	识别身份证
-// @Tags Demo
-// @Accept	mpfd
-// @Produce	json
-// @Param	image			formData	string	true	"图片的 base64 形式"
-// @Param	id_card_side	formData	string	true	"front/back 表示 照片面/国徽面"
-// @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
-// @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
-// @Router	/go/demo/cache	[post]
-func idCardRecognize(c *gin.Context) {
-	var setRequest = struct {
-		Image      string `binding:"required" form:"image" json:"image"`
-		IdCardSide string `binding:"required" form:"id_card_side" json:"id_card_side"`
-	}{}
-
-	if err := c.ShouldBind(&setRequest); err != nil {
-		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
-		return
-	}
-
-	retJson, err := baiduOcr.IdCardRecognition(c.MustGet("request_id").(string), setRequest.Image, setRequest.IdCardSide)
-	if err != nil {
-		utils.Response(c, http.StatusBadRequest, 99, fmt.Sprintf("服务器繁忙 - (%s)", err.Error()))
-		return
-	}
-
-	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", retJson)
-	return
-}
-
-// @Summary	rpcx 服务测试
-// @Description	rpcx 服务测试
-// @Router	/go/demo/rpcx	[post]
-func rpcxDemo(c *gin.Context) {
-	type Args struct {
-		A int
-		B int
-	}
-	type Reply struct {
-		C int
-	}
-	d := rpcx.NewPeer2PeerDiscovery("tcp@localhost:8972", "")
-
-	xclient := rpcx.NewXClient("Arith", rpcx.Failtry, rpcx.RandomSelect, d, rpcx.DefaultOption)
-	defer xclient.Close()
-
-	args := &Args{
-		A: 10,
-		B: 20,
-	}
-	reply := &Reply{}
-	// err := xclient.Call(context.Background(), "Mul", args, reply)
-	call, err := xclient.Go(context.Background(), "Mul", args, reply, nil)
-	if err != nil {
-		log.Fatalf("failed to call: %v", err)
-	}
-	replyCall := <-call.Done
-
-	// if err != nil {
-	if replyCall.Error != nil {
-		log.Fatalf("failed to call: %v", err)
-	}
-
-	log.Printf("%d * %d = %d", args.A, args.B, reply.C)
-	utils.Response(c, http.StatusOK, 0, "操作成功")
-	return
-}
-
-// @Summary	asynq 服务测试
-// @Description	asynq 服务测试
-// @Router	/go/demo/delay	[post]
-func runAsynq(c *gin.Context) {
-	t1 := asynq.NewTask(
-		"send_welcome_email",
-		map[string]interface{}{"user_id": 42})
-	// 立即执行
-	err := client.Enqueue(t1)
-	// 延迟执行, 24 小时
-	// err = client.EnqueueIn(24*time.Hour, t2)
-	if err != nil {
-		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
-		return
-	}
 	utils.Response(c, http.StatusOK, 0, "操作成功")
 	return
 }

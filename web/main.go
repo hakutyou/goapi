@@ -12,6 +12,7 @@ import (
 	"github.com/hakutyou/goapi/web/account"
 	"github.com/hakutyou/goapi/web/demo"
 	"github.com/hakutyou/goapi/web/external"
+	"github.com/hakutyou/goapi/web/internal"
 	"github.com/hakutyou/goapi/web/middleware"
 	"github.com/hakutyou/goapi/web/services"
 	"github.com/hakutyou/goapi/web/utils"
@@ -72,6 +73,7 @@ func main() {
 	defer closeLogger()
 
 	account.SetLogger(sugar)
+	internal.SetLogger(sugar)
 	external.SetLogger(sugar)
 	services.SetLogger(sugar)
 	utils.SetLogger(sugar)
@@ -91,7 +93,7 @@ func main() {
 	demo.SetRedis(conn)
 
 	// 连接 Asynq
-	demo.SetAsynq(client)
+	internal.SetAsynq(client)
 
 	// 运行 gin
 	// TODO: 需要一个热更新代码的方式, gracehttp
