@@ -3,10 +3,10 @@ package services
 import (
 	"errors"
 	"fmt"
+	"net/url"
 
 	"github.com/hakutyou/goapi/web/utils"
 
-	"github.com/asmcos/requests"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -28,11 +28,10 @@ func (api BaiduApi) getAccessToken(requestId string) (accessToken string, err er
 		return
 	}
 
-	retJson, err = utils.ServiceRequest(requestId, "post",
+	_, retJson, err = utils.ServiceRequestJson(requestId, "post",
 		fmt.Sprintf(
 			"%s/oauth/2.0/token?grant_type=%s&client_id=%s&client_secret=%s",
 			baiduApiBaseUrl, "client_credentials", api.ApiKey, api.SecretKey), nil)
-
 	if err != nil {
 		accessToken = ""
 		sugar.Error(err.Error())
@@ -57,21 +56,26 @@ func (api BaiduApi) clearAccessToken(err error) {
 
 // 身份证识别
 func (api BaiduApi) IdCardRecognition(requestId string, image string, idCardSide string) (retJson map[string]interface{}, err error) {
-	var accessToken string
-
+	var (
+		accessToken string
+		formByte    []byte
+	)
 	accessToken, err = api.getAccessToken(requestId)
 	if err != nil {
 		return
 	}
 
-	retJson, err = utils.ServiceRequest(requestId, "post",
+	formByte = []byte(url.Values{
+		"image":        []string{image},
+		"id_card_side": []string{idCardSide},
+	}.Encode())
+	_, retJson, err = utils.ServiceRequestJson(
+		requestId,
+		"post-form",
 		fmt.Sprintf(
 			"%s/rest/2.0/ocr/v1/idcard?access_token=%s",
 			baiduApiBaseUrl, accessToken),
-		requests.Datas{
-			"image":        image,
-			"id_card_side": idCardSide,
-		})
+		formByte)
 	if err != nil {
 		return
 	}

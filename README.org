@@ -6,7 +6,9 @@
 * TODO
 - [X] 异步 (Async)
 - [X] json 代理
-- [ ] 可能把 requests 移除, 好像用 net/http 就够了
+- [X] 可能把 requests 移除, 好像用 net/http 就够了
+- [X] rpcx
+- [ ] Async 跟 rpcx 合并
 
 * Quick Start
 #+BEGIN_SRC bash

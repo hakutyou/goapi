@@ -10,7 +10,7 @@ import (
 func doProxy(c *gin.Context) {
 	var (
 		statusCode int
-		retText    string
+		retText    []byte
 		err        error
 	)
 
@@ -28,11 +28,11 @@ func doProxy(c *gin.Context) {
 		return
 	}
 
-	statusCode, retText, err = utils.ServiceProxy(c.MustGet("request_id").(string),
-		requestInfo.Method, requestInfo.Url, requestInfo.Json)
+	statusCode, retText, err = utils.ServiceRequest(c.MustGet("request_id").(string),
+		requestInfo.Method, requestInfo.Url, []byte(requestInfo.Json))
 	if err != nil {
 		sugar.Error(err.Error())
 		return
 	}
-	c.String(statusCode, retText)
+	c.String(statusCode, string(retText))
 }

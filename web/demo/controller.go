@@ -136,6 +136,9 @@ func idCardRecognize(c *gin.Context) {
 	return
 }
 
+// @Summary	rpcx 服务测试
+// @Description	rpcx 服务测试
+// @Router	/go/demo/rpcx	[post]
 func rpcxDemo(c *gin.Context) {
 	type Args struct {
 		A int
@@ -144,7 +147,6 @@ func rpcxDemo(c *gin.Context) {
 	type Reply struct {
 		C int
 	}
-
 	d := rpcx.NewPeer2PeerDiscovery("tcp@localhost:8972", "")
 
 	xclient := rpcx.NewXClient("Arith", rpcx.Failtry, rpcx.RandomSelect, d, rpcx.DefaultOption)
@@ -172,6 +174,9 @@ func rpcxDemo(c *gin.Context) {
 	return
 }
 
+// @Summary	asynq 服务测试
+// @Description	asynq 服务测试
+// @Router	/go/demo/delay	[post]
 func runAsynq(c *gin.Context) {
 	t1 := asynq.NewTask(
 		"send_welcome_email",
