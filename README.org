@@ -9,6 +9,7 @@
 - [X] 可能把 requests 移除, 好像用 net/http 就够了
 - [X] rpcx
 - [ ] Async 跟 rpcx 合并
+- [X] Excel 支持
 
 * Quick Start
 #+BEGIN_SRC bash
@@ -43,15 +44,21 @@ go build ./web
 ./web
 #+END_SRC
 
-* RPCx
-** 安装
+* Packages
+** Excelize
+#+BEGIN_EXAMPLE
+https://xuri.me/excelize/zh-hans/
+#+END_EXAMPLE
+
+** RPCx
+*** 安装
 #+BEGIN_SRC bash
 # 使用 tags 安装
 go get -u -v -tags "etcd ping" github.com/smallnest/rpcx/...
 #+END_SRC
 
-* Swagger
-** 安装
+** Swagger
+*** 安装
 #+BEGIN_SRC bash
 # 安装 swag
 go get -u github.com/swaggo/swag/cmd/swag
@@ -61,7 +68,7 @@ go install
 swag -v
 #+END_SRC
 
-** 部署
+*** 部署
 #+BEGIN_SRC bash
 cd web
 swag init

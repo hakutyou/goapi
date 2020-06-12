@@ -47,6 +47,40 @@ func sensitiveFilter(c *gin.Context) {
 	return
 }
 
+// @Summary	导出 Excel
+// @Router	/go/internal/excel[post]
+func excelDemo(c *gin.Context) {
+	type Args struct {
+		Title string
+	}
+	type Reply struct {
+		Url string
+	}
+	xclient := rpcx.NewXClient("Excel", rpcx.Failtry, rpcx.RandomSelect, rpcxService, rpcx.DefaultOption)
+	defer xclient.Close()
+
+	args := &Args{
+		Title: "wx",
+	}
+	reply := &Reply{}
+	call, err := xclient.Go(context.Background(), "GenerateExcel", args, reply, nil)
+	if err != nil {
+		sugar.Errorw("RPCx服务调用失败",
+			"error", err.Error())
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
+		return
+	}
+	replyCall := <-call.Done
+	if replyCall.Error != nil {
+		sugar.Errorw("RPCx服务调用失败",
+			"error", replyCall.Error.Error())
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
+		return
+	}
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", reply)
+	return
+}
+
 // @Summary	rpcx 服务测试
 // @Description	rpcx 服务测试
 // @Router	/go/internal/rpcx	[post]

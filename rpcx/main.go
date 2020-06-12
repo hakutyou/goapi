@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 
-	"github.com/hakutyou/goapi/rpcx/Arith"
 	"github.com/hakutyou/goapi/rpcx/DFA"
+	"github.com/hakutyou/goapi/rpcx/Excel"
 
 	"github.com/smallnest/rpcx/server"
 )
@@ -16,7 +16,7 @@ func main() {
 
 	s := server.NewServer()
 	_ = s.RegisterName("DFA", new(DFA.DFA), "")
-	_ = s.RegisterName("Arith", new(Arith.Arith), "")
+	_ = s.RegisterName("Excel", new(Excel.Excel), "")
 	// _ = s.Register(new(Arith), "")
 	_ = s.Serve("tcp", *addr)
 }

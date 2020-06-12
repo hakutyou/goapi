@@ -7,11 +7,12 @@ import (
 
 var cfgBaiduOcr services.BaiduApi
 
-func openBaiduOcrService() {
+func openBaiduOcrService() (err error) {
 	// API 服务配置
-	if err := v.UnmarshalKey("BAIDU_OCR", &cfgBaiduOcr); err != nil {
-		panic(err)
+	if err = v.UnmarshalKey("BAIDU_OCR", &cfgBaiduOcr); err != nil {
+		return
 	}
 
 	external.SetBaiduOcr(cfgBaiduOcr)
+	return
 }

@@ -6,5 +6,6 @@ func Routes(r *gin.RouterGroup) {
 	r.POST("/sensitive", sensitiveFilter)
 
 	r.POST("/rpcx", rpcxDemo)
+	r.GET("/excel", excelDemo)
 	r.POST("/delay", runAsynq)
 }

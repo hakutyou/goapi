@@ -29,5 +29,5 @@ func openRedis() (err error) {
 		Password: cfg.Password,
 		DB:       cfg.Index,
 	}
-	return nil
+	return
 }

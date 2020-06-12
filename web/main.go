@@ -37,11 +37,15 @@ func init() {
 	utils.SetEnvironment(v.GetString("JWT_SECRET"))
 
 	// 数据库配置
-	openDB()
+	if err := openDB(); err != nil {
+		panic(err)
+	}
 	defer closeDB()
 
 	// asynq 配置
-	initAsynq()
+	if err := initAsynq(); err != nil {
+		panic(err)
+	}
 
 	// 其他服务设置
 	if err := initServices(); err != nil {
@@ -50,7 +54,9 @@ func init() {
 	account.SetTencentSms(tencentSms)
 
 	// API 服务配置
-	openBaiduOcrService()
+	if err := openBaiduOcrService(); err != nil {
+		panic(err)
+	}
 
 	// gin
 	gin.SetMode(v.GetString("RUN_MODE"))
@@ -80,13 +86,17 @@ func main() {
 	middleware.SetLogger(sugar)
 
 	// 连接数据库
-	openDB()
+	if err := openDB(); err != nil {
+		panic(err)
+	}
 	defer closeDB()
 
 	account.SetDatabase(db)
 
 	// 连接 Redis
-	openRedis()
+	if err := openRedis(); err != nil {
+		panic(err)
+	}
 	defer closeRedis()
 
 	services.SetRedis(conn)
@@ -136,8 +146,8 @@ func openLogger() {
 	sugar = logger.Sugar()
 }
 
-func closeLogger() {
-	_ = sugar.Sync()
+func closeLogger() error {
+	return sugar.Sync()
 }
 
 func initServices() error {
