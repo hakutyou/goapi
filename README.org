@@ -3,15 +3,17 @@
 #+DATE: 2020-05-11
 #+OPTIONS: ^:{}
 
-* TODO
-- [X] 异步 (Async)
+* TODO 更新列表
+- 异步 [3/4]
+  - [X] 异步 (Async)
+  - [X] rpcx
+  - [ ] Async 跟 rpcx 合并
+  - [X] Accounnt 服务分离
+- 功能 [3/3]
+  - [X] Excel 支持
+  - [X] 可能把 requests 移除, 好像用 net/http 就够了
+  - [X] 使用 Crypto/rand 代替 Math/rand
 - [X] json 代理
-- [X] 可能把 requests 移除, 好像用 net/http 就够了
-- [X] rpcx
-- [ ] Async 跟 rpcx 合并
-- [X] Excel 支持
-- [X] Accounnt 服务分离
-- [X] 使用 Crypto/rand 代替 Math/rand
 
 * Quick Start
 #+BEGIN_SRC bash
@@ -22,6 +24,7 @@ go mod vendor
 # 配置 yaml
 # debug 模式使用 script/debug.yaml
 cp script/release.yaml .config.yaml
+cp script/release.account.yaml .account.yaml
 cp script/zap.yaml .zap.yaml
 
 # 设置 data

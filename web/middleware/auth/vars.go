@@ -20,9 +20,10 @@ func (c RpcxClient) DoConnect(servicePath string) rpcx.XClient {
 		rpcxService, rpcx.DefaultOption)
 }
 
-func init() {
+func SetClient(remote string, port int) {
 	Client = RpcxClient{
-		Remote: "localhost",
-		Port:   8971,
+		Remote: remote, // "localhost",
+		Port:   port,   // 8971,
 	}
+	return
 }

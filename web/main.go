@@ -36,6 +36,11 @@ func init() {
 	// JWT 配置
 	// utils.SetEnvironment(v.GetString("JWT_SECRET"))
 
+	// rpcx 配置
+	if err := initRpcx(); err != nil {
+		panic(err)
+	}
+
 	// asynq 配置
 	if err := initAsynq(); err != nil {
 		panic(err)

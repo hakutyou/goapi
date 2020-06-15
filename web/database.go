@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/hakutyou/goapi/web/middleware/auth"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/hibiken/asynq"
@@ -19,6 +20,11 @@ type redisAsynqConfig struct {
 	Host     string `yaml:"Host"`
 	Port     string `yaml:"port"`
 	Password string `yaml:"Password"`
+}
+
+type rpcxConfig struct {
+	Remote string `yaml:"Remote"`
+	Port   int    `yaml:"Port"`
 }
 
 func openRedis() (err error) {
@@ -50,5 +56,15 @@ func initAsynq() (err error) {
 		Password: cfg.Password,
 		DB:       cfg.Index,
 	})
+	return
+}
+
+func initRpcx() (err error) {
+	var cfg rpcxConfig
+
+	if err = v.UnmarshalKey("ACCOUNT", &cfg); err != nil {
+		return
+	}
+	auth.SetClient(cfg.Remote, cfg.Port)
 	return
 }
