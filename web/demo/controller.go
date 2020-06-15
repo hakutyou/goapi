@@ -2,6 +2,7 @@ package demo
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
@@ -78,4 +79,28 @@ func setCache(c *gin.Context) {
 
 	utils.Response(c, http.StatusOK, 0, "操作成功")
 	return
+}
+
+func slowLoading(c *gin.Context) {
+	i := 0
+	t := time.NewTicker(1 * time.Second)
+	defer t.Stop()
+
+	for {
+		if i >= 3 {
+			break
+		}
+
+		select {
+		case <-t.C:
+			// 1s 触发一次
+			utils.Response(c, http.StatusOK, 0, "操作成功")
+		case <-c.Request.Context().Done():
+			// 客户端中断
+			print("closed")
+			return
+		}
+		print("OK")
+		i += 1
+	}
 }

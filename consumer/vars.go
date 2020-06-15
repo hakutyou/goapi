@@ -13,6 +13,6 @@ var (
 type redisConfig struct {
 	Index    int    `yaml:"TaskIndex"`
 	Host     string `yaml:"Host"`
-	Port     string `yaml:"Port"`
+	Port     string `yaml:"port"`
 	Password string `yaml:"Password"`
 }

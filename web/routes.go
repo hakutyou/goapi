@@ -39,6 +39,3 @@ func MiddleWare() {
 	r.Use(gin.Recovery())
 }
 
-func Migrations() {
-	account.Models(db)
-}

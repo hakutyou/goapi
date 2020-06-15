@@ -1,9 +1,8 @@
 package account
 
 import (
-	"github.com/hakutyou/goapi/web/middleware/auth"
-
 	"github.com/gin-gonic/gin"
+	"github.com/hakutyou/goapi/web/middleware/auth"
 )
 
 func Routes(r *gin.RouterGroup) {
@@ -18,5 +17,5 @@ func Routes(r *gin.RouterGroup) {
 	// 需要登录的接口
 	r_userinfo := r.Group("/userinfo")
 	r_userinfo.Use(auth.TokenCheckMiddleware)
-	r_userinfo.GET("/", getUserinfo)
+	r_userinfo.GET("/", userinfoAccount)
 }

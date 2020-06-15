@@ -10,6 +10,8 @@
 - [X] rpcx
 - [ ] Async 跟 rpcx 合并
 - [X] Excel 支持
+- [X] Accounnt 服务分离
+- [X] 使用 Crypto/rand 代替 Math/rand
 
 * Quick Start
 #+BEGIN_SRC bash

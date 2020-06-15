@@ -18,5 +18,6 @@ func main() {
 	_ = s.RegisterName("DFA", new(DFA.DFA), "")
 	_ = s.RegisterName("Excel", new(Excel.Excel), "")
 	// _ = s.Register(new(Arith), "")
+	print(*addr)
 	_ = s.Serve("tcp", *addr)
 }

@@ -1,9 +1,7 @@
 /.idea/
 
 /gorm.db
-/.config.yaml
-/.zap.yaml
-/.rpcx.yaml
+/.*.yaml
 
 /data/*.dat
 /web/docs/*

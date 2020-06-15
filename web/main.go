@@ -34,13 +34,7 @@ func init() {
 	}
 
 	// JWT 配置
-	utils.SetEnvironment(v.GetString("JWT_SECRET"))
-
-	// 数据库配置
-	if err := openDB(); err != nil {
-		panic(err)
-	}
-	defer closeDB()
+	// utils.SetEnvironment(v.GetString("JWT_SECRET"))
 
 	// asynq 配置
 	if err := initAsynq(); err != nil {
@@ -63,7 +57,6 @@ func init() {
 	r = gin.New()
 
 	MiddleWare()                // 中间件
-	Migrations()                // 数据库迁移
 	Route(v.GetBool("SWAGGER")) // 路由
 }
 
@@ -84,14 +77,6 @@ func main() {
 	services.SetLogger(sugar)
 	utils.SetLogger(sugar)
 	middleware.SetLogger(sugar)
-
-	// 连接数据库
-	if err := openDB(); err != nil {
-		panic(err)
-	}
-	defer closeDB()
-
-	account.SetDatabase(db)
 
 	// 连接 Redis
 	if err := openRedis(); err != nil {
