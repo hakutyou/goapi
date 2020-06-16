@@ -1,10 +1,9 @@
 package DFA
 
 import (
+	"github.com/hakutyou/goapi/core/utils"
 	"io/ioutil"
 	"strings"
-
-	"github.com/hakutyou/goapi/rpcx/utils"
 )
 
 func init() {
@@ -21,11 +20,11 @@ func init() {
 	for _, v := range outSensitive {
 		Set[v] = nil
 	}
-	AddSensitiveToMap(Set)
+	addSensitiveToMap(Set)
 }
 
 // 生成词集合
-func AddSensitiveToMap(set map[string]interface{}) {
+func addSensitiveToMap(set map[string]interface{}) {
 	for key := range set {
 		str := []rune(key)
 		nowMap := sensitiveWord
@@ -46,7 +45,7 @@ func AddSensitiveToMap(set map[string]interface{}) {
 }
 
 // 敏感词汇转换为 *
-func ChangeSensitiveWords(txt string) (word string) {
+func changeSensitiveWords(txt string) (word string) {
 	str := []rune(txt)
 	nowMap := sensitiveWord
 	start := -1
@@ -90,7 +89,7 @@ func ChangeSensitiveWords(txt string) (word string) {
 }
 
 // 添加敏感词汇
-func SensitiveAppend(appendContext []byte) bool {
+func sensitiveAppend(appendContext []byte) bool {
 	outData, err := ioutil.ReadFile(sensitiveFile)
 	if err != nil {
 		return false

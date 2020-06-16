@@ -9,6 +9,7 @@ import (
 // zlib 压缩
 func Compress(src []byte) (outData []byte, err error) {
 	var in bytes.Buffer
+
 	w := zlib.NewWriter(&in)
 	_, err = w.Write(src)
 	if err != nil {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/hakutyou/goapi/web/internal"
 	"github.com/hakutyou/goapi/web/middleware/auth"
 
 	"github.com/garyburd/redigo/redis"
@@ -62,7 +63,12 @@ func initAsynq() (err error) {
 func initRpcx() (err error) {
 	var cfg rpcxConfig
 
-	if err = v.UnmarshalKey("ACCOUNT", &cfg); err != nil {
+	if err = v.UnmarshalKey("RPCx_CORE", &cfg); err != nil {
+		return
+	}
+	internal.SetClient(cfg.Remote, cfg.Port)
+
+	if err = v.UnmarshalKey("RPCx_ACCOUNT", &cfg); err != nil {
 		return
 	}
 	auth.SetClient(cfg.Remote, cfg.Port)

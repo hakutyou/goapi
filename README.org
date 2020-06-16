@@ -13,6 +13,7 @@
   - [X] Excel 支持
   - [X] 可能把 requests 移除, 好像用 net/http 就够了
   - [X] 使用 Crypto/rand 代替 Math/rand
+  - [X] 发送邮件支持
 - [X] json 代理
 
 * Quick Start
@@ -25,6 +26,7 @@ go mod vendor
 # debug 模式使用 script/debug.yaml
 cp script/release.yaml .config.yaml
 cp script/release.account.yaml .account.yaml
+cp script/core.yaml .core.yaml
 cp script/zap.yaml .zap.yaml
 
 # 设置 data

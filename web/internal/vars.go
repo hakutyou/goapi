@@ -1,19 +1,27 @@
 package internal
 
 import (
+	"github.com/hakutyou/goapi/web/utils"
 	"github.com/hibiken/asynq"
-	rpcx "github.com/smallnest/rpcx/client"
 	"go.uber.org/zap"
 )
 
 var (
-	rpcxService rpcx.ServiceDiscovery
-	client      *asynq.Client
-	sugar       *zap.SugaredLogger
+	Client  utils.RpcxClient
+	aclient *asynq.Client
+	sugar   *zap.SugaredLogger
 )
 
+func SetClient(remote string, port int) {
+	Client = utils.RpcxClient{
+		Remote: remote,
+		Port:   port,
+	}
+	return
+}
+
 func SetAsynq(c *asynq.Client) {
-	client = c
+	aclient = c
 }
 
 func SetLogger(sugarLogger *zap.SugaredLogger) {

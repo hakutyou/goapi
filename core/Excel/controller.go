@@ -4,16 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/360EntSecGroup-Skylar/excelize/v2"
+	"github.com/hakutyou/goapi/core/utils/cosfs"
+	uuid "github.com/satori/go.uuid"
 	"io/ioutil"
 	"strconv"
-
-	"github.com/hakutyou/goapi/rpcx/utils/cosfs"
-
-	"github.com/360EntSecGroup-Skylar/excelize/v2"
-	uuid "github.com/satori/go.uuid"
 )
-
-type Excel int
 
 type Args struct {
 	Title string
@@ -23,24 +19,8 @@ type Reply struct {
 	Url string
 }
 
-type WxSkillMain struct {
-	SkillId   int            `json:"skillId"`
-	SkillType int            `json:"skillType"`
-	SkillName string         `json:"skillName"`
-	MaxLevel  int            `json:"maxLevel"`
-	MainDes   string         `json:"mainDes"`
-	Levels    []WxSkillLevel `json:"levels"`
-}
-
-type WxSkillLevel struct {
-	Xiuwei   int      `json:"xiuwei"`
-	Banggong int      `json:"banggong"`
-	Suiyin   int      `json:"suiyin"`
-	Des      string   `json:"des"`
-	Props    []string `json:"props"`
-}
-
-func (t *Excel) GenerateExcel(ctx context.Context, args *Args, reply *Reply) (err error) {
+func (Excel) GenerateExcel(_ context.Context,
+	args *Args, reply *Reply) (err error) {
 	var (
 		data         []byte
 		wxSkillMain  []WxSkillMain
@@ -208,7 +188,7 @@ func (t *Excel) GenerateExcel(ctx context.Context, args *Args, reply *Reply) (er
 	var filename string
 	filename = uuid.NewV4().String() + ".xlsx"
 
-	if err = e.Save(filename, false); err != nil {
+	if err = e.Save(filename, true); err != nil {
 		return
 	}
 	reply.Url = fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s",

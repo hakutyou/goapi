@@ -9,12 +9,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/spf13/viper"
 	"github.com/tencentyun/cos-go-sdk-v5"
 )
 
 var (
-	v      *viper.Viper
 	CosApi COSApi
 )
 
@@ -26,12 +24,9 @@ type COSApi struct {
 	c      *cos.Client
 }
 
-func (cosApi *COSApi) initCOS() (err error) {
+func (cosApi *COSApi) InitCOS() (err error) {
 	var b *url.URL
 
-	if err = v.UnmarshalKey("COSFS", &cosApi); err != nil {
-		return
-	}
 	if b, err = url.Parse("https://" + cosApi.Bucket + ".cos." +
 		cosApi.Region + ".myqcloud.com"); err != nil {
 		return

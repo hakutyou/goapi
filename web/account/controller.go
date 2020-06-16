@@ -20,8 +20,8 @@ import (
 // @Router	/go/account/	[post]
 func createAccount(c *gin.Context) {
 	var (
-		user auth.User
 		err  error
+		user auth.User
 	)
 	if err = c.ShouldBind(&user); err != nil {
 		utils.Response(c, http.StatusBadRequest, 1, "参数格式错误")
