@@ -7,9 +7,12 @@
 /web/docs/*
 /temporary/*
 /vendor/
+
+/account/account
+/core/core
 /web/web
 /consumer/consumer
-/rpcx/rpcx
+/moonlight/moonlight
 
 !keep.go
 !.gitkeep

@@ -12,8 +12,10 @@ type AccountRank struct {
 
 	BangPai  string `gorm:"size:32"`
 	LianMeng string `gorm:"size:32"`
-	Sex      string `gorm:"type:enum('male','female','little_female')"`
-	Class    string `gorm:"type:enum('zw','tb','sw','gb','tm','wd','sl','tx','sd','yh')"`
+        Sex      string `gorm:"size:32"`
+	// Sex      string `gorm:"type:enum('male','female','little_female')"`
+	Class    string `gorm:"size:32"`
+	// Class    string `gorm:"type:enum('zw','tb','sw','gb','tm','wd','sl','tx','sd','yh')"`
 	GongLi   uint
 }
 
