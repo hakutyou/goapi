@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/hakutyou/goapi/moonlight/Bang"
 	"github.com/hakutyou/goapi/moonlight/Rank"
 	"github.com/hakutyou/goapi/moonlight/database"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -21,6 +22,7 @@ func init() {
 		panic(err)
 	}
 	// 迁移
+	Bang.Models(database.DBCfg.DB)
 	Rank.Models(database.DBCfg.DB)
 }
 
@@ -31,6 +33,9 @@ func main() {
 	)
 
 	s = server.NewServer()
+	if err = s.RegisterName("Bang", new(Bang.Bang), ""); err != nil {
+		panic(err)
+	}
 	if err = s.RegisterName("Rank", new(Rank.Rank), ""); err != nil {
 		panic(err)
 	}

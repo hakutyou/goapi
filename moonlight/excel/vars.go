@@ -1,4 +1,4 @@
-package Excel
+package excel
 
 import (
 	"bufio"
@@ -8,16 +8,16 @@ import (
 	"time"
 )
 
-type excelWrite struct {
+type Writer struct {
 	Title  string
 	Author string
-	f      *excelize.File
+	F      *excelize.File
 }
 
-func (e *excelWrite) NewFile() error {
-	e.f = excelize.NewFile()
-	e.f.SetDefaultFont("等距更纱黑体 SC")
-	return e.f.SetDocProps(&excelize.DocProperties{
+func (e *Writer) NewFile() error {
+	e.F = excelize.NewFile()
+	e.F.SetDefaultFont("等距更纱黑体 SC")
+	return e.F.SetDocProps(&excelize.DocProperties{
 		Title:          e.Title,
 		Subject:        e.Title,
 		Creator:        e.Author,
@@ -30,14 +30,14 @@ func (e *excelWrite) NewFile() error {
 	})
 }
 
-func (e *excelWrite) NewSheet(sheetName string) (err error) {
+func (e *Writer) NewSheet(sheetName string) (err error) {
 	var docProps *excelize.DocProperties
 
-	e.f.NewSheet(sheetName)
-	if docProps, err = e.f.GetDocProps(); err != nil {
+	e.F.NewSheet(sheetName)
+	if docProps, err = e.F.GetDocProps(); err != nil {
 		return
 	}
-	return e.f.SetHeaderFooter(sheetName, &excelize.FormatHeaderFooter{
+	return e.F.SetHeaderFooter(sheetName, &excelize.FormatHeaderFooter{
 		DifferentFirst:   true,
 		DifferentOddEven: true,
 		OddHeader:        "&R&P/&N",
@@ -46,20 +46,20 @@ func (e *excelWrite) NewSheet(sheetName string) (err error) {
 	})
 }
 
-func (e *excelWrite) MiniMap(sheetName string,
+func (e *Writer) MiniMap(sheetName string,
 	location []string, _range []string) (err error) {
-	return e.f.AddSparkline(sheetName, &excelize.SparklineOption{
+	return e.F.AddSparkline(sheetName, &excelize.SparklineOption{
 		Location: location,
 		Range:    _range,
 		Markers:  true,
 	})
 }
 
-func (e *excelWrite) Save(filename string, isUpload bool) (err error) {
+func (e *Writer) Save(filename string, isUpload bool) (err error) {
 	var filepath string
 
 	filepath = "./temporary/" + filename
-	if err = e.f.SaveAs(filepath); err != nil {
+	if err = e.F.SaveAs(filepath); err != nil {
 		return
 	}
 

@@ -1,99 +1,89 @@
-package Excel
+package Bang
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize/v2"
 	"github.com/hakutyou/goapi/core/utils/cosfs"
+	"github.com/hakutyou/goapi/moonlight/database"
+	"github.com/hakutyou/goapi/moonlight/excel"
 	uuid "github.com/satori/go.uuid"
-	"io/ioutil"
 	"strconv"
 )
 
 type Args struct {
-	Title string
 }
 
 type Reply struct {
 	Url string
 }
 
-func (Excel) GenerateExcel(_ context.Context,
-	args *Args, reply *Reply) (err error) {
+func (Bang) GenerateExcel(_ context.Context,
+	_ Args, reply *Reply) (err error) {
 	var (
-		data         []byte
-		wxSkillMain  []WxSkillMain
+		skills       []Skill
+		skillDetails []SkillDetail
 		streamWriter *excelize.StreamWriter
 
-		e *excelWrite
+		e *excel.Writer
 	)
-	// 解析原始 json
-	if data, err = ioutil.ReadFile("data/wx_skill.json"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	if err = json.Unmarshal(data, &wxSkillMain); err != nil {
-		fmt.Println(err)
-		return
-	}
-	// 创建文件
-	e = &excelWrite{
-		args.Title,
-		"sirat",
-		nil,
+
+	e = &excel.Writer{
+		Title:  "Bang Skill",
+		Author: "sirat",
 	}
 	if err = e.NewFile(); err != nil {
 		return
 	}
 
-	for _, vMain := range wxSkillMain {
+	database.DBCfg.DB.Find(&skills)
+	for _, each := range skills {
 		// 创建工作表
-		if err = e.NewSheet(vMain.SkillName); err != nil {
+		if err = e.NewSheet(each.Name); err != nil {
 			fmt.Println(err)
 			return
 		}
 		// 设置列宽
-		if err = e.f.SetColWidth(vMain.SkillName, "B", "D", 15); err != nil {
+		if err = e.F.SetColWidth(each.Name, "B", "D", 15); err != nil {
 			fmt.Println(err)
 			return
 		}
-		if err = e.f.SetColWidth(vMain.SkillName, "E", "E", 45); err != nil {
+		if err = e.F.SetColWidth(each.Name, "E", "E", 45); err != nil {
 			fmt.Println(err)
 			return
 		}
 		// 合并单元格
-		if err = e.f.MergeCell(vMain.SkillName, "B3", "D3"); err != nil {
+		if err = e.F.MergeCell(each.Name, "B3", "D3"); err != nil {
 			fmt.Println(err)
 			return
 		}
 
 		// 流式写入器
-		if streamWriter, err = e.f.NewStreamWriter(vMain.SkillName); err != nil {
+		if streamWriter, err = e.F.NewStreamWriter(each.Name); err != nil {
 			fmt.Println(err)
 			return
 		}
 		// 表头
 		if err = streamWriter.SetRow("A1", []interface{}{
 			"ID",
-			vMain.SkillId,
+			each.ID,
 			"名称",
-			vMain.SkillName,
+			each.Name,
 		}); err != nil {
 			fmt.Println(err)
 			return
 		}
 		if err = streamWriter.SetRow("A2", []interface{}{
 			"类型",
-			vMain.SkillType,
-			// vMain.MaxLevel,
+			each.TypeId,
+			// each.MaxLevel,
 		}); err != nil {
 			fmt.Println(err)
 			return
 		}
 		if err = streamWriter.SetRow("A3", []interface{}{
 			"描述",
-			vMain.MainDes,
+			each.MainDes,
 		}); err != nil {
 			fmt.Println(err)
 			return
@@ -109,18 +99,19 @@ func (Excel) GenerateExcel(_ context.Context,
 			return
 		}
 		// 循环填充数据
-		for i, vLevel := range vMain.Levels {
+		database.DBCfg.DB.Where("skill_id = ?", each.ID).Find(&skillDetails)
+		for i, eachDetail := range skillDetails {
 			var pos string
 			if pos, err = excelize.CoordinatesToCellName(1, 6+i); err != nil {
 				fmt.Println(err)
 			}
 			if err = streamWriter.SetRow(pos, []interface{}{
 				i,
-				vLevel.Xiuwei,
-				vLevel.Banggong,
-				vLevel.Suiyin,
-				vLevel.Des,
-				vLevel.Props,
+				eachDetail.XiuWei,
+				eachDetail.BangGong,
+				eachDetail.SuiYin,
+				eachDetail.Des,
+				eachDetail.Props,
 			}); err != nil {
 				fmt.Println(err)
 				return
@@ -132,55 +123,54 @@ func (Excel) GenerateExcel(_ context.Context,
 			return
 		}
 		// 写入总计
-		lastPos := len(vMain.Levels) + 5
+		lastPos := len(skillDetails) + 5
 		lastPosStr := strconv.Itoa(lastPos)
 		totalPosStr := strconv.Itoa(lastPos + 1)
 
-		if err = e.f.SetCellFormula(vMain.SkillName, "B"+totalPosStr, "SUM(B6:BA"+lastPosStr+")"); err != nil {
+		if err = e.F.SetCellFormula(each.Name, "B"+totalPosStr, "SUM(B6:BA"+lastPosStr+")"); err != nil {
 			fmt.Println(err)
 			return
 		}
-		if err = e.f.SetCellFormula(vMain.SkillName, "C"+totalPosStr, "SUM(C6:CA"+lastPosStr+")"); err != nil {
+		if err = e.F.SetCellFormula(each.Name, "C"+totalPosStr, "SUM(C6:CA"+lastPosStr+")"); err != nil {
 			fmt.Println(err)
 			return
 		}
-		if err = e.f.SetCellFormula(vMain.SkillName, "D"+totalPosStr, "SUM(D6:DA"+lastPosStr+")"); err != nil {
+		if err = e.F.SetCellFormula(each.Name, "D"+totalPosStr, "SUM(D6:DA"+lastPosStr+")"); err != nil {
 			fmt.Println(err)
 			return
 		}
-		// 创建单元格格式
+		// 创建单元格样式
 		var boldStyle int
-
-		if boldStyle, err = e.f.NewStyle(`{"font":{"bold":true}}`); err != nil {
+		if boldStyle, err = e.F.NewStyle(`{"font":{"bold":true}}`); err != nil {
 			fmt.Println(err)
 			return
 		}
 		// 设置单元格样式
-		if err = e.f.SetCellStyle(vMain.SkillName, "A1", "A3", boldStyle); err != nil {
+		if err = e.F.SetCellStyle(each.Name, "A1", "A3", boldStyle); err != nil {
 			fmt.Println(err)
 			return
 		}
-		if err = e.f.SetCellStyle(vMain.SkillName, "C1", "C1", boldStyle); err != nil {
+		if err = e.F.SetCellStyle(each.Name, "C1", "C1", boldStyle); err != nil {
 			fmt.Println(err)
 			return
 		}
-		if err = e.f.SetCellStyle(vMain.SkillName, "A5", "F5", boldStyle); err != nil {
+		if err = e.F.SetCellStyle(each.Name, "A5", "F5", boldStyle); err != nil {
 			fmt.Println(err)
 			return
 		}
 		// 迷你图
-		if err = e.MiniMap(vMain.SkillName,
+		if err = e.MiniMap(each.Name,
 			[]string{"B4", "C4", "D4"},
 			[]string{
-				vMain.SkillName + "!B6:B" + lastPosStr,
-				vMain.SkillName + "!C6:C" + lastPosStr,
-				vMain.SkillName + "!D6:D" + lastPosStr,
+				each.Name + "!B6:B" + lastPosStr,
+				each.Name + "!C6:C" + lastPosStr,
+				each.Name + "!D6:D" + lastPosStr,
 			}); err != nil {
 			return
 		}
 	}
 	// 删除默认的工作表
-	e.f.DeleteSheet("Sheet1")
+	e.F.DeleteSheet("Sheet1")
 	// 设置工作簿的默认工作表
 	// f.SetActiveSheet(1)
 
@@ -188,7 +178,7 @@ func (Excel) GenerateExcel(_ context.Context,
 	var filename string
 	filename = uuid.NewV4().String() + ".xlsx"
 
-	if err = e.Save(filename, true); err != nil {
+	if err = e.Save(filename, false); err != nil {
 		return
 	}
 	reply.Url = fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s",

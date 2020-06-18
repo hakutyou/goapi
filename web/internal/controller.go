@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/hakutyou/goapi/web/utils"
+	rpcx "github.com/smallnest/rpcx/client"
 	"net/http"
 )
 
@@ -39,40 +40,6 @@ func sensitiveFilter(c *gin.Context) {
 	return
 }
 
-// @Summary	导出 Excel
-// @Router	/go/internal/excel[post]
-func excelDemo(c *gin.Context) {
-	type Args struct {
-		Title string
-	}
-	type Reply struct {
-		Url string
-	}
-	print(c.Request.RemoteAddr)
-	xclient := Client.DoConnect("Excel")
-	defer xclient.Close()
-	args := &Args{
-		Title: "wx",
-	}
-	reply := &Reply{}
-	call, err := xclient.Go(context.Background(), "GenerateExcel", args, reply, nil)
-	if err != nil {
-		sugar.Errorw("RPCx服务调用失败",
-			"error", err.Error())
-		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
-		return
-	}
-	replyCall := <-call.Done
-	if replyCall.Error != nil {
-		sugar.Errorw("RPCx服务调用失败",
-			"error", replyCall.Error.Error())
-		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
-		return
-	}
-	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", reply)
-	return
-}
-
 // // @Summary	asynq 服务测试
 // // @Description	asynq 服务测试
 // // @Router	/go/internal/delay	[post]
@@ -91,3 +58,35 @@ func excelDemo(c *gin.Context) {
 // 	utils.Response(c, http.StatusOK, 0, "操作成功")
 // 	return
 // }
+
+// @Summary	导出 Excel
+// @Router	/go/internal/moonlight/bang	[post]
+func moonlightBang(c *gin.Context) {
+	var (
+		err  error
+		call *rpcx.Call
+		args struct{}
+	)
+	reply := &struct {
+		Url string
+	}{}
+
+	xclient := MoonlightClient.DoConnect("Bang")
+	defer xclient.Close()
+	if call, err = xclient.Go(context.Background(), "GenerateExcel",
+		args, reply, nil); err != nil {
+		sugar.Errorw("RPCx服务调用失败",
+			"error", err.Error())
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
+		return
+	}
+	replyCall := <-call.Done
+	if replyCall.Error != nil {
+		sugar.Errorw("RPCx服务调用失败",
+			"error", replyCall.Error.Error())
+		utils.Response(c, http.StatusBadRequest, 1, "服务器繁忙")
+		return
+	}
+	utils.ResponseWithData(c, http.StatusOK, 0, "操作成功", reply)
+	return
+}

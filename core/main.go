@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/hakutyou/goapi/core/DFA"
-	"github.com/hakutyou/goapi/core/Excel"
 	"github.com/hakutyou/goapi/core/Mail"
 	"github.com/smallnest/rpcx/server"
 )
@@ -27,9 +26,6 @@ func main() {
 		panic(err)
 	}
 	if err = s.RegisterName("DFA", new(DFA.DFA), ""); err != nil {
-		panic(err)
-	}
-	if err = s.RegisterName("Excel", new(Excel.Excel), ""); err != nil {
 		panic(err)
 	}
 	if err = s.Serve("tcp",

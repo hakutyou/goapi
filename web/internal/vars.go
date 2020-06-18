@@ -7,13 +7,22 @@ import (
 )
 
 var (
-	Client  utils.RpcxClient
-	aclient *asynq.Client
-	sugar   *zap.SugaredLogger
+	Client          utils.RpcxClient
+	MoonlightClient utils.RpcxClient
+	aclient         *asynq.Client
+	sugar           *zap.SugaredLogger
 )
 
 func SetClient(remote string, port int) {
 	Client = utils.RpcxClient{
+		Remote: remote,
+		Port:   port,
+	}
+	return
+}
+
+func SetMoonlightClient(remote string, port int) {
+	MoonlightClient = utils.RpcxClient{
 		Remote: remote,
 		Port:   port,
 	}

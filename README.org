@@ -102,7 +102,13 @@ https://goproxy.cn
 ** Mariadb
 - 创建数据库
 #+BEGIN_SRC mysql
+-- mysql -h 127.0.0.1 -uroot -p
 create database api default character set utf8mb4 collate utf8mb4_unicode_ci;
+-- 如果已经建立了数据库
+alter database api character set utf8mb4 collate utf8mb4_general_ci;
+-- 如果已经建立了表
+-- use api;
+alter table my_table convert to character set utf8mb4 collate utf8mb4_general_ci;
 #+END_SRC
 
 - PyCharm 无法连接尝试使用以下 URL 确定时区信息

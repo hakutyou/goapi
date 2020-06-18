@@ -68,6 +68,11 @@ func initRpcx() (err error) {
 	}
 	internal.SetClient(cfg.Remote, cfg.Port)
 
+	if err = v.UnmarshalKey("RPCx_MOONLIGHT", &cfg); err != nil {
+		return
+	}
+	internal.SetMoonlightClient(cfg.Remote, cfg.Port)
+
 	if err = v.UnmarshalKey("RPCx_ACCOUNT", &cfg); err != nil {
 		return
 	}
