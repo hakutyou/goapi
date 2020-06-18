@@ -36,7 +36,6 @@ cp data/sensitive.dat.orig data/sensitive.dat
 - 运行
 #+BEGIN_SRC bash
 # consumer 为 Asynq 的 worker
-go run ./consumer
 go run ./web
 #+END_SRC
 
@@ -44,11 +43,7 @@ go run ./web
 #+BEGIN_SRC bash
 # 确保编译环境和正式环境的 GLIBC 版本一致
 # 可以通过 `ldd --version` 查看
-go build ./consumer
-./consumer
-
-go build ./web
-./web
+make
 #+END_SRC
 
 * Packages
@@ -115,3 +110,10 @@ alter table my_table convert to character set utf8mb4 collate utf8mb4_general_ci
 #+BEGIN_EXAMPLE
 jdbc:mysql://localhost:3306/goapi?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 #+END_EXAMPLE
+
+** docker-compose
+#+BEGIN_SRC bash
+# 如果使用 resource limit 功能且没有 swarm, 需要加 --compatibility 参数
+docker-compose --compatibility up -d
+#+END_SRC
+

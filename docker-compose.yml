@@ -1,18 +1,28 @@
-version: '3'
+version: '3.8'
 
-networks:
-  base-net:
-    external: true
 services:
   api:
-    image: hakutyou/ubuntu:tuna
-    restart: always
     hostname: goapi
+    image: hakutyou/ubuntu:tuna
     working_dir: /app/api
     # command: tail -f /dev/null
     command: ./run.sh
     volumes:
       - ./:/app/api/
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 300M
+        reservations:
+          memory: 100M
+      restart_policy:
+        condition: on-failure
     networks:
       base-net:
         ipv4_address: 172.18.0.79
+
+networks:
+  base-net:
+    external: true
+
