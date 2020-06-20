@@ -117,3 +117,8 @@ jdbc:mysql://localhost:3306/goapi?useUnicode=true&useJDBCCompliantTimezoneShift=
 docker-compose --compatibility up -d
 #+END_SRC
 
+** Git
+Windows 下可执行权限问题
+#+BEGIN_SRC bash
+git config core.filemode false
+#+END_SRC
