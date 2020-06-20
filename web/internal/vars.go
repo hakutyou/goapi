@@ -2,15 +2,14 @@ package internal
 
 import (
 	"github.com/hakutyou/goapi/web/utils"
-	"github.com/hibiken/asynq"
 	"go.uber.org/zap"
 )
 
 var (
 	Client          utils.RpcxClient
 	MoonlightClient utils.RpcxClient
-	aclient         *asynq.Client
 	sugar           *zap.SugaredLogger
+	// aclient         *asynq.Client
 )
 
 func SetClient(remote string, port int) {
@@ -29,9 +28,9 @@ func SetMoonlightClient(remote string, port int) {
 	return
 }
 
-func SetAsynq(c *asynq.Client) {
-	aclient = c
-}
+// func SetAsynq(c *asynq.Client) {
+// 	aclient = c
+// }
 
 func SetLogger(sugarLogger *zap.SugaredLogger) {
 	sugar = sugarLogger

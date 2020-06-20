@@ -93,7 +93,7 @@ func main() {
 	demo.SetRedis(conn)
 
 	// 连接 Asynq
-	internal.SetAsynq(client)
+	// internal.SetAsynq(client)
 
 	// 运行 gin
 	// TODO: 需要一个热更新代码的方式, gracehttp

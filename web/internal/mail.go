@@ -13,6 +13,10 @@ type Message struct {
 	Body    string   `binding:"required" form:"body" json:"body"`
 }
 
+// @Summary	发送邮件
+// @Description	发送邮件
+// @Tags 内部调用
+// @Router	/go/internal/sendmail	[post]
 func sendMail(c *gin.Context) {
 	var (
 		err            error

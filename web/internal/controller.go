@@ -9,6 +9,8 @@ import (
 )
 
 // @Summary	过滤敏感词
+// @Description	过滤敏感词
+// @Tags 内部调用
 // @Router	/go/internal/sensitive	[post]
 func sensitiveFilter(c *gin.Context) {
 	var (
@@ -42,6 +44,7 @@ func sensitiveFilter(c *gin.Context) {
 
 // // @Summary	asynq 服务测试
 // // @Description	asynq 服务测试
+// // @Tags 内部调用
 // // @Router	/go/internal/delay	[post]
 // func runAsynq(c *gin.Context) {
 // 	t1 := asynq.NewTask(
@@ -60,6 +63,8 @@ func sensitiveFilter(c *gin.Context) {
 // }
 
 // @Summary	导出 Excel
+// @Description	导出 Excel
+// @Tags 内部调用
 // @Router	/go/internal/moonlight/bang	[post]
 func moonlightBang(c *gin.Context) {
 	var (

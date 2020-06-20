@@ -7,7 +7,8 @@ import (
 )
 
 // @Summary	获取手机短信验证码
-// @Tags 用户
+// @Description	获取手机短信验证码
+// @Tags 短信
 // @Produce	json
 // @Router	/go/sms_captcha	[get]
 func smsCaptchaGet(c *gin.Context) {
@@ -30,7 +31,8 @@ func smsCaptchaGet(c *gin.Context) {
 }
 
 // @Summary	检验手机短信验证码
-// @Tags 用户
+// @Description	检验手机短信验证码
+// @Tags 短信
 // @Accept	mpfd
 // @Produce	json
 // @Router	/go/sms_captcha	[post]

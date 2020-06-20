@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary	请求代理
+// @Description	请求代理
+// @Tags 外部调用
+// @Router	/go/external/proxy	[post]
 func doProxy(c *gin.Context) {
 	var (
 		statusCode int

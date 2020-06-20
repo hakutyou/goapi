@@ -11,14 +11,14 @@ import (
 
 // @Summary	识别身份证
 // @Description	识别身份证
-// @Tags Demo
+// @Tags 外部调用
 // @Accept	mpfd
 // @Produce	json
 // @Param	image			formData	string	true	"图片的 base64 形式"
 // @Param	id_card_side	formData	string	true	"front/back 表示 照片面/国徽面"
 // @success	200	{object}	utils.ResponseDataResult	"code 为 0 表示成功"
 // @success	400	{object}	utils.ResponseResult		"message 返回错误信息"
-// @Router	/go/demo/cache	[post]
+// @Router	/go/external/cache	[post]
 func idCardRecognize(c *gin.Context) {
 	var setRequest = struct {
 		Image      string `binding:"required" form:"image" json:"image"`

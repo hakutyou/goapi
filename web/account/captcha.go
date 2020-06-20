@@ -9,6 +9,7 @@ import (
 )
 
 // @Summary	获取验证码
+// @Description	获取验证码
 // @Tags 用户
 // @Produce	json
 // @Router	/go/captcha	[get]
@@ -25,7 +26,8 @@ func captchaGet(c *gin.Context) {
 }
 
 // @Summary	检验验证码
-// @Tags 用户
+// @Description	检验验证码
+// @Tags 验证码
 // @Accept	mpfd
 // @Produce	json
 // @Router	/go/captcha	[post]
@@ -48,7 +50,8 @@ func captchaVerify(c *gin.Context) {
 }
 
 // @Summary	查看验证码图片
-// @Tags 用户
+// @Description	查看验证码图片
+// @Tags 验证码
 // @Router	/go/captcha/:source	[get]
 func captchaGetPng(c *gin.Context) {
 	ucaptcha.ServeHTTP(c.Writer, c.Request)
