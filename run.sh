@@ -1,7 +1,6 @@
 #!/bin/bash
 
-./account/account &
-./consumer/consumer &
-./core/core &
-./moonlight/moonlight &
-./web/web
+./account/account.elf &
+./core/core.elf &
+./moonlight/moonlight.elf &
+./web/web.elf

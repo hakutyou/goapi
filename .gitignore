@@ -8,11 +8,6 @@
 /temporary/*
 /vendor/
 
-/account/account
-/core/core
-/web/web
-/consumer/consumer
-/moonlight/moonlight
-
+*.elf
 !keep.go
 !.gitkeep
