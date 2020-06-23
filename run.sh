@@ -3,4 +3,5 @@
 ./account/account.elf &
 ./core/core.elf &
 ./moonlight/moonlight.elf &
-./web/web.elf
+./web/web.elf &
+tail -f /dev/null
