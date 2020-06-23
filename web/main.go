@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
 	"github.com/facebookgo/grace/gracehttp"
 	"github.com/gin-gonic/gin"
@@ -21,13 +21,17 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
-)
-
-var (
-	upgrade bool
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 func init() {
+	// pid 文件
+	if err := newPIDFile("web.pid"); err != nil {
+		panic(err)
+	}
+
 	// 读取配置文件
 	if err := LoadConfigure(); err != nil {
 		panic(fmt.Sprintf("无法读取配置文件: %v\n", err))
@@ -72,12 +76,6 @@ func init() {
 // @in header
 // @name Authorization
 func main() {
-	var (
-		err error
-	)
-
-	flag.BoolVar(&upgrade, "upgrade", false, "upgrade server")
-	flag.Parse()
 	// 日志
 	openLogger()
 	defer closeLogger()
@@ -90,7 +88,7 @@ func main() {
 	middleware.SetLogger(sugar)
 
 	// 连接 Redis
-	if err = openRedis(); err != nil {
+	if err := openRedis(); err != nil {
 		panic(err)
 	}
 	defer closeRedis()
@@ -102,10 +100,10 @@ func main() {
 	// internal.SetAsynq(client)
 
 	// 运行 gin
+	// debugServer(":8080", r)
 	// gracehttp. 热更新代码
-	if err = gracehttp.Serve(
-		&http.Server{Addr: ":8080", Handler: r},
-	); err != nil {
+	if err := gracehttp.Serve(
+		&http.Server{Addr: ":8080", Handler: r}); err != nil {
 		sugar.Info("Server error:  ", err)
 	}
 }
@@ -129,4 +127,23 @@ func closeLogger() error {
 
 func initServices() error {
 	return v.UnmarshalKey("TENCENT_SMS", &tencentSms)
+}
+
+func newPIDFile(path string) (err error) {
+	var (
+		pidByte []byte
+	)
+	if pidByte, err = ioutil.ReadFile(path); err == nil {
+		pid := strings.TrimSpace(string(pidByte))
+		if _, err := os.Stat(filepath.Join("/proc", pid)); err == nil {
+			return errors.New("进程正在运行")
+		}
+	}
+	if err = os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
+		return
+	}
+	if err = ioutil.WriteFile(path, []byte(fmt.Sprintf("%d", os.Getpid())), 0644); err != nil {
+		return
+	}
+	return
 }

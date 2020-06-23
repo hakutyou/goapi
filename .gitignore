@@ -8,6 +8,7 @@
 /temporary/*
 /vendor/
 
+*.pid
 *.elf
 !keep.go
 !.gitkeep
