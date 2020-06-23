@@ -1,14 +1,10 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"os/signal"
-	"time"
-
+	"github.com/facebookgo/grace/gracehttp"
+	"github.com/gin-gonic/gin"
 	"github.com/hakutyou/goapi/web/account"
 	"github.com/hakutyou/goapi/web/demo"
 	"github.com/hakutyou/goapi/web/external"
@@ -16,8 +12,6 @@ import (
 	"github.com/hakutyou/goapi/web/middleware"
 	"github.com/hakutyou/goapi/web/services"
 	"github.com/hakutyou/goapi/web/utils"
-
-	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -25,6 +19,12 @@ import (
 	_ "github.com/swaggo/gin-swagger/swaggerFiles"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"net/http"
+)
+
+var (
+	upgrade bool
 )
 
 func init() {
@@ -42,9 +42,9 @@ func init() {
 	}
 
 	// asynq 配置
-	if err := initAsynq(); err != nil {
-		panic(err)
-	}
+	// if err := initAsynq(); err != nil {
+	// 	panic(err)
+	// }
 
 	// 其他服务设置
 	if err := initServices(); err != nil {
@@ -72,6 +72,12 @@ func init() {
 // @in header
 // @name Authorization
 func main() {
+	var (
+		err error
+	)
+
+	flag.BoolVar(&upgrade, "upgrade", false, "upgrade server")
+	flag.Parse()
 	// 日志
 	openLogger()
 	defer closeLogger()
@@ -84,7 +90,7 @@ func main() {
 	middleware.SetLogger(sugar)
 
 	// 连接 Redis
-	if err := openRedis(); err != nil {
+	if err = openRedis(); err != nil {
 		panic(err)
 	}
 	defer closeRedis()
@@ -97,30 +103,11 @@ func main() {
 
 	// 运行 gin
 	// TODO: 需要一个热更新代码的方式, gracehttp
-	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: r,
+	if err = gracehttp.Serve(
+		&http.Server{Addr: ":8080", Handler: r},
+	); err != nil {
+		sugar.Info("Server error:  ", err)
 	}
-	sugar.Info("Server started")
-	go func() {
-		// service connections
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			panic(fmt.Sprintf("listen: %s\n", err))
-		}
-	}()
-	// Wait for interrupt signal to gracefully shutdown the server with
-	// a timeout of 5 seconds.
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	sugar.Info("Shutdown server ...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		sugar.Info("Server Shutdown: ", err)
-	}
-	sugar.Info("Server exiting")
 }
 
 func openLogger() {

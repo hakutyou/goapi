@@ -6,6 +6,9 @@ require (
 	github.com/360EntSecGroup-Skylar/excelize/v2 v2.2.0
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/facebookgo/grace v0.0.0-20180706040059-75cf19382434
+	github.com/facebookgo/httpdown v0.0.0-20180706035922-5979d39b15c2 // indirect
+	github.com/facebookgo/stats v0.0.0-20151006221625-1b76add642e4 // indirect
 	github.com/garyburd/redigo v1.6.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis/v7 v7.3.0 // indirect

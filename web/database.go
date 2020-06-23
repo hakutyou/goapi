@@ -6,7 +6,6 @@ import (
 	"github.com/hakutyou/goapi/web/middleware/auth"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/hibiken/asynq"
 )
 
 type redisConfig struct {
@@ -46,19 +45,19 @@ func closeRedis() error {
 	return conn.Close()
 }
 
-func initAsynq() (err error) {
-	var cfg redisAsynqConfig
-
-	if err = v.UnmarshalKey("REDIS", &cfg); err != nil {
-		return
-	}
-	client = asynq.NewClient(asynq.RedisClientOpt{
-		Addr:     fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
-		Password: cfg.Password,
-		DB:       cfg.Index,
-	})
-	return
-}
+// func initAsynq() (err error) {
+// 	var cfg redisAsynqConfig
+//
+// 	if err = v.UnmarshalKey("REDIS", &cfg); err != nil {
+// 		return
+// 	}
+// 	client = asynq.NewClient(asynq.RedisClientOpt{
+// 		Addr:     fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
+// 		Password: cfg.Password,
+// 		DB:       cfg.Index,
+// 	})
+// 	return
+// }
 
 func initRpcx() (err error) {
 	var cfg rpcxConfig

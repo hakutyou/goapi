@@ -38,4 +38,3 @@ func MiddleWare() {
 	r.Use(middleware.LoggerMiddleware)
 	r.Use(gin.Recovery())
 }
-
