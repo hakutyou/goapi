@@ -15,6 +15,7 @@
   - [X] 使用 Crypto/rand 代替 Math/rand
   - [X] 发送邮件支持
 - [X] json 代理
+- [X] 使用 gracehttp
 
 * Quick Start
 #+BEGIN_SRC bash

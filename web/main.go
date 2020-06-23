@@ -102,7 +102,7 @@ func main() {
 	// internal.SetAsynq(client)
 
 	// 运行 gin
-	// TODO: 需要一个热更新代码的方式, gracehttp
+	// gracehttp. 热更新代码
 	if err = gracehttp.Serve(
 		&http.Server{Addr: ":8080", Handler: r},
 	); err != nil {
