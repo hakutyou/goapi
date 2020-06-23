@@ -1,6 +1,7 @@
 SUBDIRS = core account moonlight
 
 all: init $(SUBDIRS) web
+	docker exec -u root goapi_api_1 kill -USR2 `cat web.pid`
 
 init:
 	go mod tidy
