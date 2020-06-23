@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/facebookgo/grace/gracehttp"
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func init() {
@@ -130,15 +128,15 @@ func initServices() error {
 }
 
 func newPIDFile(path string) (err error) {
-	var (
-		pidByte []byte
-	)
-	if pidByte, err = ioutil.ReadFile(path); err == nil {
-		pid := strings.TrimSpace(string(pidByte))
-		if _, err := os.Stat(filepath.Join("/proc", pid)); err == nil {
-			return errors.New("进程正在运行")
-		}
-	}
+	// var (
+	// 	pidByte []byte
+	// )
+	// if pidByte, err = ioutil.ReadFile(path); err == nil {
+	// 	pid := strings.TrimSpace(string(pidByte))
+	// 	if _, err := os.Stat(filepath.Join("/proc", pid)); err == nil {
+	// 		return errors.New("进程正在运行")
+	// 	}
+	// }
 	if err = os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
 		return
 	}
