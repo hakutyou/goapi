@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	v          *viper.Viper
-	r          *gin.Engine
-	conn       redis.Conn
+	v    *viper.Viper
+	r    *gin.Engine
+	conn redis.Conn
 	// client     *asynq.Client
 	sugar      *zap.SugaredLogger
 	tencentSms *services.TencentSms

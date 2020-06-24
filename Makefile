@@ -7,6 +7,11 @@ init:
 	go mod tidy
 	go mod vendor
 
+fmt:
+	for file in `find . -path ./vendor -prune -o -name '*.go' -print`; do \
+		gofmt -w $${file}; \
+	done
+
 clean:
 	for d in $(SUBDIRS); do \
 		make clean -C $$d; \
@@ -23,5 +28,5 @@ web: .zap.yaml .config.yaml FORCE
 	@echo "$@ 不存在"; exit 1
 
 FORCE:
-.PHONY: FORCE init all clean
+.PHONY: FORCE init all clean fmt
 
