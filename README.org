@@ -89,6 +89,14 @@ git submodule update
 #+END_SRC
 
 * 其他问题
+** Format
+- GoLand 保存文件时自动使用 `go fmt` 格式化代码
+#+BEGIN_EXAMPLE
+Settings -> Tools -> File Watcher -> Add -> go fmt
+
+同理可开启 golangci-link, goimports
+#+END_EXAMPLE
+
 ** Golang
 - 代理
 #+BEGIN_EXAMPLE
@@ -107,7 +115,7 @@ alter database api character set utf8mb4 collate utf8mb4_general_ci;
 alter table my_table convert to character set utf8mb4 collate utf8mb4_general_ci;
 #+END_SRC
 
-- PyCharm 无法连接尝试使用以下 URL 确定时区信息
+- GoLand 无法连接尝试使用以下 URL 确定时区信息
 #+BEGIN_EXAMPLE
 jdbc:mysql://localhost:3306/goapi?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 #+END_EXAMPLE
