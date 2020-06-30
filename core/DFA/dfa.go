@@ -51,7 +51,7 @@ func changeSensitiveWords(txt string) (word string) {
 	start := -1
 	tag := -1
 	for i := 0; i < len(str); i++ {
-		if _, ok := InvalidWord[(string(str[i]))]; ok {
+		if _, ok := InvalidWord[string(str[i])]; ok {
 			continue // 如果是无效词汇直接跳过
 		}
 		if thisMap, ok := nowMap[string(str[i])].(map[string]interface{}); ok {

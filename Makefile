@@ -9,7 +9,9 @@ init:
 
 fmt:
 	for file in `find . -path ./vendor -prune -o -name '*.go' -print`; do \
-		gofmt -w $${file}; \
+		gofmt -w $${file} && \
+		gofmt -r '(a) -> a' -w $${file} && \
+		gofmt -r 'a[n:len(a)] -> a[n:]' –w $${file}; \
 	done
 
 clean:
