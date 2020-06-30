@@ -1,0 +1,16 @@
+name: GoApi Linter
+
+jobs:
+  build:
+    name: GoApi Linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Linter
+        uses: docker://github/super-linter:v3
+        env:
+          VALIDATE_ALL_CODEBASE: true
+
