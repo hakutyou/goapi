@@ -1,5 +1,8 @@
 name: GoApi Linter
 
+on:
+  push:
+
 jobs:
   build:
     name: GoApi Linter

@@ -10,5 +10,7 @@
 
 *.pid
 *.elf
+*.swo
+*.swp
 !keep.go
 !.gitkeep
